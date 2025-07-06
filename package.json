@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build --no-lint",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
@@ -17,6 +17,7 @@
     "@mui/stylis-plugin-rtl": "^7.2.0",
     "@reduxjs/toolkit": "^2.8.2",
     "@types/react-slick": "^0.23.13",
+    "@types/stylis": "^4.2.7",
     "flowbite": "^3.1.2",
     "formik": "^2.4.6",
     "next": "15.3.3",
