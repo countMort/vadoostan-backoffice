@@ -1,195 +1,351 @@
 "use client"
-import { useState } from "react";
+import { useGetExperienceCreationDataQuery } from "@/api"
+import DatePicker from "@/components/Global/Form/DatePicker"
+import Form from "@/components/Global/Form/FormWrapper"
+import { NumberInput } from "@/components/Global/Form/NumberInput"
+import TrashIcon from "@/components/Global/Icons/TrashIcon"
+import { baseUrl, create_exp_form_validation_schema } from "@/constants"
+import { FieldArray, FormikProps } from "formik"
+import { useCallback, useEffect, useRef } from "react"
+import { DateObject } from "react-multi-date-picker"
+import persian from "react-date-object/calendars/persian"
+import persian_fa from "react-date-object/locales/persian_fa"
+import { toPersianDigits } from "@/utils/locale"
+import TextField from "@/components/Global/Form/TextField"
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CardMedia,
+  MenuItem,
+  Typography,
+  TextField as MUITextField,
+} from "@mui/material"
+import { RootState } from "@/store"
+import { useDispatch, useSelector } from "react-redux"
+import { setFormValues } from "./create.slice"
+import { useRouter } from "next/navigation"
+import AutoComplete from "@/components/Global/Form/AutoComplete"
+
+// creatorId: 01JSVKNNAXDZNZ5NBDTSAZKWPM
 
 export default function ExperienceForm() {
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    faqs: [{ question: "", answer: "" }],
-  });
+  const formValues = useSelector((state: RootState) => state.createExp.form)
+  const dispatch = useDispatch()
+  const router = useRouter()
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+  const handleSubmit = useCallback(
+    (data: typeof formValues) => {
+      console.log(data)
+      dispatch(setFormValues(data))
+      router.push("/create/confirm")
+    },
+    [dispatch, router]
+  )
+  const { data, isLoading } = useGetExperienceCreationDataQuery()
 
-  const handleFaqChange = (index, e) => {
-    const { name, value } = e.target;
-    const updatedFaqs = [...formData.faqs];
-    updatedFaqs[index][name] = value;
+  useEffect(() => {
+    const now = new DateObject({ calendar: persian, locale: persian_fa })
+    now.add(1, "day")
+    while (now.weekDay.index !== 0) {
+      now.add(1, "day")
+    }
+    now.setHour(9).setMinute(0).setSecond(0)
+    formikRef.current?.setFieldValue(
+      "sessions[0].publishTime.date",
+      now.format()
+    )
+    formikRef.current?.setFieldValue(
+      "sessions[0].publishTime.time",
+      toPersianDigits("9:00")
+    )
+  }, [])
 
-    setFormData((prev) => ({
-      ...prev,
-      faqs: updatedFaqs,
-    }));
-  };
+  const formikRef = useRef<FormikProps<typeof formValues>>(null)
 
-  const addFaq = () => {
-    setFormData((prev) => ({
-      ...prev,
-      faqs: [...prev.faqs, { question: "", answer: "" }],
-    }));
-  };
-
-  const removeFaq = (index) => {
-    if (formData.faqs.length <= 1) return;
-
-    const updatedFaqs = formData.faqs.filter((_, i) => i !== index);
-    setFormData((prev) => ({
-      ...prev,
-      faqs: updatedFaqs,
-    }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Here you would typically send formData to your backend
-    console.log("Form submitted:", formData);
-    alert("Experience submitted successfully!");
-  };
+  const getVenue = useCallback(
+    (venueId: number) => {
+      return data?.result.venues.find((venue) => venue.id === venueId)
+    },
+    [data?.result.venues]
+  )
+  const getDirector = useCallback(
+    (directorId: string) => {
+      return data?.result.directors.find(
+        (director) => director.userId === directorId
+      )
+    },
+    [data?.result.directors]
+  )
 
   return (
-    <div className="max-w-3xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-8 text-center">Create Experience</h1>
-
-      <form
+    <div className="mx-auto max-w-3xl mt-5 border-1 border-gray-400 rounded-sm">
+      <Form
+        initialValues={formValues}
         onSubmit={handleSubmit}
-        className="bg-white shadow-md rounded-lg p-8"
+        validationSchema={create_exp_form_validation_schema}
+        loading={isLoading}
+        formikRef={formikRef}
+        classNames={{ form: "grid grid-cols-12 gap-4" }}
       >
-        {/* Title Field */}
-        <div className="mb-6">
-          <label
-            htmlFor="title"
-            className="block text-gray-700 font-medium mb-2"
-          >
-            Title
-          </label>
-          <input
-            type="text"
-            id="title"
-            name="title"
-            value={formData.title}
-            onChange={handleInputChange}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Experience title"
-            required
-          />
-        </div>
+        {({ values, setFieldValue }) => (
+          <>
+            <TextField
+              name="title"
+              label="تیتر"
+              className="md:col-span-4 col-span-12"
+            />
+            <TextField
+              className="md:col-span-8 col-span-12"
+              name="description"
+              label="توضیحات"
+              maxChar={400}
+              minRows={3}
+              multiline
+            />
+            <FieldArray name="faqs">
+              {({ push, remove }) => (
+                <div className="col-span-12">
+                  <h3>پرسش های پر تکرار (FAQ)</h3>
+                  {values.faqs.map((_: any, index: number) => (
+                    <div key={index} className="p-4 border rounded-md">
+                      <div className="mb-2">
+                        <TextField
+                          name={`faqs[${index}].question`}
+                          label="سوال"
+                          placeholder="سوال را وارد کنید"
+                        />
+                      </div>
+                      <div className="mb-2">
+                        <TextField
+                          multiline
+                          rows={3}
+                          name={`faqs[${index}].answer`}
+                          placeholder="پاسخ را وارد کنید"
+                          label="پاسخ"
+                        />
+                      </div>
+                      {index > 0 && (
+                        <button
+                          type="button"
+                          onClick={() => remove(index)}
+                          className="text-sm text-red-600 mt-1"
+                        >
+                          <TrashIcon />
+                        </button>
+                      )}
+                    </div>
+                  ))}
 
-        {/* Description Field */}
-        <div className="mb-6">
-          <label
-            htmlFor="description"
-            className="block text-gray-700 font-medium mb-2"
-          >
-            Description
-          </label>
-          <textarea
-            id="description"
-            name="description"
-            value={formData.description}
-            onChange={handleInputChange}
-            rows={4}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Detailed description of the experience"
-            required
-          />
-        </div>
-
-        {/* FAQs Section */}
-        <div className="mb-6">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold text-gray-800">FAQs</h2>
-            <button
-              type="button"
-              onClick={addFaq}
-              className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors"
-            >
-              Add FAQ
-            </button>
-          </div>
-
-          {formData.faqs.map((faq, index) => (
-            <div
-              key={index}
-              className="mb-6 p-4 border border-gray-200 rounded-md relative"
-            >
-              {formData.faqs.length > 1 && (
-                <button
-                  type="button"
-                  onClick={() => removeFaq(index)}
-                  className="absolute top-2 right-2 text-red-500 hover:text-red-700"
-                  aria-label="Remove FAQ"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                </button>
+                  <Button onClick={() => push({ question: "", answer: "" })}>
+                    افزودن FAQ
+                  </Button>
+                </div>
               )}
+            </FieldArray>
+            <FieldArray name="sessions">
+              {() =>
+                values.sessions.map((_: any, index: number) => (
+                  <div
+                    key={`sessions[${index}]`}
+                    className="col-span-12 grid grid-cols-12 gap-4"
+                  >
+                    <NumberInput
+                      name={`sessions[${index}].price`}
+                      label="هزینه (تومان)"
+                      classNames={{ wrapper: "col-span-12 sm:col-span-6" }}
+                    />
+                    <NumberInput
+                      name={`sessions[${index}.capacity]`}
+                      label="ظرفیت (نفر)"
+                      classNames={{ wrapper: "col-span-12 sm:col-span-6" }}
+                    />
+                    <DatePicker
+                      name={`sessions[${index}.time]`}
+                      label="زمان شروع"
+                      classNames={{ wrapper: "col-span-12 sm:col-span-6" }}
+                    />
+                    <TextField
+                      name={`sessions[${index}].duration`}
+                      label="مدت زمان تجربه (ساعت)"
+                      className="col-span-12 sm:col-span-6"
+                    />
+                    <TextField
+                      multiline
+                      rows={3}
+                      name={`sessions[${index}].description`}
+                      label="توضیحات"
+                      className="col-span-12 md:col-span-6"
+                    />
+                    <AutoComplete
+                      name={`sessions[${index}].categories`}
+                      className="col-span-12 md:col-span-6"
+                      multiple
+                      options={data?.result.categories || []}
+                      getOptionLabel={(option) => option.title}
+                      defaultValue={[]}
+                      filterSelectedOptions
+                      renderInput={(params) => (
+                        <MUITextField
+                          {...params}
+                          label="آنچه در این تجربه ارائه میشود"
+                        />
+                      )}
+                    />
+                    <TextField
+                      name={`sessions[${index}.groupLink]`}
+                      label="لینک گروه تلگرامی"
+                      dir="ltr"
+                      className="col-span-12 md:col-span-6"
+                    />
+                    <TextField
+                      name={`sessions[${index}].publishTime.date`}
+                      label="روز انتشار"
+                      disabled
+                      className="col-span-12 sm:col-span-6"
+                    />
+                    <TextField
+                      name={`sessions[${index}].publishTime.time`}
+                      label="ساعت انتشار"
+                      disabled
+                      className="col-span-12 sm:col-span-6"
+                    />
+                    {data?.result && (
+                      <TextField
+                        name={`sessions[${index}].director.userId`}
+                        label="تجربه گردان"
+                        select
+                        className="col-span-12 sm:col-span-6"
+                        onChange={(e) => {
+                          const directorId = String(e.target.value)
+                          setFieldValue(
+                            `sessions[${index}].director.userId`,
+                            directorId
+                          )
 
-              <div className="mb-4">
-                <label
-                  htmlFor={`question-${index}`}
-                  className="block text-gray-700 font-medium mb-2"
-                >
-                  Question #{index + 1}
-                </label>
-                <input
-                  type="text"
-                  id={`question-${index}`}
-                  name="question"
-                  value={faq.question}
-                  onChange={(e) => handleFaqChange(index, e)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Enter question"
-                  required
-                />
-              </div>
+                          const director = getDirector(directorId)
+                          setFieldValue(
+                            `sessions[${index}].director.name`,
+                            director?.name ?? ""
+                          )
+                          setFieldValue(
+                            `sessions[${index}].director.bio`,
+                            director?.bio ?? ""
+                          )
+                          setFieldValue(
+                            `sessions[${index}].director.photoUrl`,
+                            director?.photoUrl ?? ""
+                          )
+                        }}
+                      >
+                        <MenuItem value={-1}></MenuItem>
+                        {data?.result.directors.map((director) => (
+                          <MenuItem
+                            key={`mamad-${director.name}`}
+                            value={director.userId}
+                          >
+                            {director.name}
+                          </MenuItem>
+                        ))}
+                      </TextField>
+                    )}
+                    {values.sessions[index].director?.userId && (
+                      <Card
+                        sx={{ display: "flex" }}
+                        className="col-span-12 sm:col-span-6"
+                      >
+                        <CardMedia
+                          component="img"
+                          sx={{ width: 151 }}
+                          image={`${
+                            baseUrl +
+                              values.sessions[index].director.photoUrl || ""
+                          }`}
+                          alt={`تصویر ${values.sessions[index].director.name}`}
+                        />
+                        <Box sx={{ display: "flex", flexDirection: "column" }}>
+                          <CardContent sx={{ flex: "1 0 auto" }}>
+                            <Typography component="div" variant="h5">
+                              {values.sessions[index].director.name || ""}
+                            </Typography>
+                            <Typography
+                              variant="subtitle1"
+                              component="div"
+                              sx={{ color: "text.secondary" }}
+                            >
+                              {values.sessions[index].director.bio || ""}
+                            </Typography>
+                          </CardContent>
+                        </Box>
+                      </Card>
+                    )}
+                    {data?.result && (
+                      <TextField
+                        name={`sessions[${index}].venue.id`}
+                        label="محل برگزاری"
+                        select
+                        className="col-span-12 sm:col-span-6"
+                        onChange={(e) => {
+                          const venueId = Number(e.target.value)
+                          setFieldValue(`sessions[${index}].venue.id`, venueId)
 
-              <div>
-                <label
-                  htmlFor={`answer-${index}`}
-                  className="block text-gray-700 font-medium mb-2"
-                >
-                  Answer #{index + 1}
-                </label>
-                <textarea
-                  id={`answer-${index}`}
-                  name="answer"
-                  value={faq.answer}
-                  onChange={(e) => handleFaqChange(index, e)}
-                  rows={3}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Enter answer"
-                  required
-                />
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Submit Button */}
-        <button
-          type="submit"
-          className="w-full py-3 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-        >
-          Create Experience
-        </button>
-      </form>
+                          const venue = getVenue(venueId)
+                          setFieldValue(
+                            `sessions[${index}].venue.title`,
+                            venue?.title ?? ""
+                          )
+                          setFieldValue(
+                            `sessions[${index}].venue.address`,
+                            venue?.address ?? ""
+                          )
+                        }}
+                      >
+                        <MenuItem value={-1}></MenuItem>
+                        {data?.result.venues.map((venue) => (
+                          <MenuItem
+                            key={`mamad-${venue.title}`}
+                            value={venue.id}
+                          >
+                            {venue.title}
+                          </MenuItem>
+                        ))}
+                      </TextField>
+                    )}
+                    <TextField
+                      label="محله"
+                      name={`sessions[${index}].venue.title`}
+                      disabled
+                      className="col-span-12 sm:col-span-6"
+                      value={
+                        getVenue(values.sessions[index].venue.id)?.title || ""
+                      }
+                    />
+                    <TextField
+                      label="آدرس"
+                      name={`sessions[${index}].venue.address`}
+                      disabled
+                      value={
+                        getVenue(values.sessions[index].venue.id)?.address || ""
+                      }
+                      className="col-span-12 sm:col-span-6"
+                    />
+                  </div>
+                ))
+              }
+            </FieldArray>
+            <Button
+              onClick={() => {
+                formikRef.current?.submitForm()
+                console.log(formikRef.current?.values)
+                console.log(formikRef.current?.errors)
+              }}
+            >
+              ثبت
+            </Button>
+          </>
+        )}
+      </Form>
     </div>
-  );
+  )
 }
