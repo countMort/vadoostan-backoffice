@@ -1,4 +1,3 @@
-import { baseUrl } from "@/constants";
 import { RootState } from "@/store";
 import {
   CreateExperienceBody,
@@ -15,7 +14,8 @@ function isHydrateAction(action: Action): action is PayloadAction<RootState> {
 export const mainApi = createApi({
   reducerPath: "mainApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: `${baseUrl}/api`,
+    // baseUrl: `${baseUrl}/api`,
+    baseUrl: "/api/", // Proxy in next.config
     headers: {
       "Content-Type": "application/json",
       "ngrok-skip-browser-warning": "sag",

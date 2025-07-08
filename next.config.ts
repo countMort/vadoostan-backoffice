@@ -1,5 +1,5 @@
-import { hostName } from "@/constants"
-import type { NextConfig } from "next"
+import { baseUrl, hostName } from "@/constants";
+import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
@@ -16,6 +16,14 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-}
+  async rewrites() {
+    return [
+      {
+        source: "/api/:path*", // Your local proxy endpoint
+        destination: `${baseUrl}/api/:path*`, // Target URL
+      },
+    ];
+  },
+};
 
-export default nextConfig
+export default nextConfig;
