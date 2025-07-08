@@ -25,7 +25,7 @@ import { RootState } from "@/store";
 import { useDispatch, useSelector } from "react-redux";
 import { setFormValues } from "./create.slice";
 import { useRouter } from "next/navigation";
-import Autocomplete from "@/components/Global/Form/Autoomplete";
+import Autocomplete from "@/components/Global/Form/Autocomplete";
 
 export default function ExperienceForm() {
   const formValues = useSelector((state: RootState) => state.createExp.form);
