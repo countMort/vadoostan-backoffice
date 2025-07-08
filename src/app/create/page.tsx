@@ -34,7 +34,6 @@ export default function ExperienceForm() {
 
   const handleSubmit = useCallback(
     (data: typeof formValues) => {
-      console.log(data);
       dispatch(setFormValues(data));
       router.push("/create/confirm");
     },
