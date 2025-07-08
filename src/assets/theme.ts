@@ -5,6 +5,7 @@ import { Vazirmatn } from "next/font/google";
 
 export const vazirmatn = Vazirmatn({
   variable: "--font-vazir",
+  subsets: ["arabic"],
 });
 
 export const getTheme = (mode: "light" | "dark") =>
