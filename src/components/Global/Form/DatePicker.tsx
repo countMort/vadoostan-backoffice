@@ -5,6 +5,8 @@ import FieldWrapper from "./Partials/FieldWrapper";
 import { useFormikContext } from "formik";
 import { BaseInputProps } from "@/types/form";
 import TimePicker from "react-multi-date-picker/plugins/time_picker";
+import { DateObject } from "react-multi-date-picker";
+import { time_format } from "@/constants";
 
 const DatePicker = ({
   name,
@@ -45,3 +47,15 @@ const DatePicker = ({
 };
 
 export default DatePicker;
+
+export const customDate = (
+  date: string,
+  { format = time_format, locale = persian_fa, calendar = persian } = {}
+) => {
+  return new DateObject({
+    format,
+    date: date,
+    locale,
+    calendar,
+  });
+};

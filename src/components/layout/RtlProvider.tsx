@@ -9,6 +9,7 @@ import { ReactNode } from "react";
 // Create rtl cache
 const rtlCache = createCache({
   key: "muirtl",
+  prepend: true,
   stylisPlugins: [prefixer, rtlPlugin],
 });
 

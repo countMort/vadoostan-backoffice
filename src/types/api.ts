@@ -25,3 +25,28 @@ export interface UseGetExperienceCreationDataQueryResponse {
     title: string;
   }[];
 }
+
+export interface CreateExperienceBody {
+  title: string;
+  description: string;
+  categoryId: number;
+  faqs: {
+    question: string;
+    answer: string;
+  }[];
+  isSeries: boolean;
+  creatorUserId: string;
+  sessions: {
+    time: string;
+    publishTime: string;
+    description: string;
+    duration: number;
+    venueId: number;
+    price: number;
+    capacity: number;
+    groupLink: string;
+    allowedGender: string;
+    directorsUserId: string[];
+    assistantsUserId: string[];
+  }[];
+}

@@ -1,10 +1,12 @@
 import { mainApi } from "@/api";
 import createExpReducer from "@/app/create/create.slice";
+import globalReducer from "@/app/global.slice";
 import { configureStore } from "@reduxjs/toolkit";
 
 export const store = configureStore({
   reducer: {
     [mainApi.reducerPath]: mainApi.reducer,
+    global: globalReducer,
     createExp: createExpReducer,
   },
   middleware: (getDefaultMiddleware) =>

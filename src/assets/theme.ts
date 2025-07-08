@@ -1,13 +1,18 @@
 "use client";
 
 import { createTheme } from "@mui/material";
+import { Vazirmatn } from "next/font/google";
+
+export const vazirmatn = Vazirmatn({
+  variable: "--font-vazir",
+});
 
 export const getTheme = (mode: "light" | "dark") =>
   createTheme({
     cssVariables: true,
     direction: "rtl",
     typography: {
-      fontFamily: "IRANSans",
+      fontFamily: vazirmatn.style.fontFamily,
     },
     palette: {
       mode,

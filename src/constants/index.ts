@@ -35,11 +35,15 @@ export const create_exp_form_initial_values = {
       answer: "",
     },
   ],
+  category: { id: -1, title: "" } as {
+    id: number;
+    title: string;
+  },
   sessions: [
     {
       time: "",
       description: "",
-      duration: "",
+      duration: 0,
       price: 0,
       capacity: 0,
       publishTime: {
@@ -58,7 +62,7 @@ export const create_exp_form_initial_values = {
         bio: "",
         photoUrl: "",
       },
-      categories: [] as {
+      inclusions: [] as {
         id: number;
         title: string;
       }[],

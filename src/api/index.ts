@@ -1,6 +1,7 @@
 import { baseUrl } from "@/constants";
 import { RootState } from "@/store";
 import {
+  CreateExperienceBody,
   Response,
   UseGetExperienceCreationDataQueryResponse,
 } from "@/types/api";
@@ -28,17 +29,23 @@ export const mainApi = createApi({
     }
   },
   endpoints: (build) => ({
-    getExperiences: build.query<any, string>({
-      query: (name) => `pokemon/${name}`,
-    }),
     getExperienceCreationData: build.query<
       Response<UseGetExperienceCreationDataQueryResponse>,
       void
     >({
       query: () => `admin/experiences/creation/data`,
     }),
+    createExperience: build.mutation<any, CreateExperienceBody>({
+      query: (body) => ({
+        url: "admin/experiences",
+        method: "POST",
+        body,
+      }),
+    }),
   }),
 });
 
-export const { useGetExperiencesQuery, useGetExperienceCreationDataQuery } =
-  mainApi;
+export const {
+  useGetExperienceCreationDataQuery,
+  useCreateExperienceMutation,
+} = mainApi;

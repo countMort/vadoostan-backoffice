@@ -14,9 +14,12 @@ export const createExpSlice = createSlice({
     ) => {
       state.form = action.payload;
     },
+    resetForm: (state) => {
+      state.form = create_exp_form_initial_values;
+    },
   },
 });
 
-export const { setFormValues } = createExpSlice.actions;
+export const { setFormValues, resetForm } = createExpSlice.actions;
 
 export default createExpSlice.reducer;

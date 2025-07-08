@@ -1,19 +1,18 @@
-"use client"
-import { useGetExperienceCreationDataQuery } from "@/api"
-import DatePicker from "@/components/Global/Form/DatePicker"
-import Form from "@/components/Global/Form/FormWrapper"
-import { NumberInput } from "@/components/Global/Form/NumberInput"
-import TrashIcon from "@/components/Global/Icons/TrashIcon"
-import { baseUrl, create_exp_form_validation_schema } from "@/constants"
-import { FieldArray, FormikProps } from "formik"
-import { useCallback, useEffect, useRef } from "react"
-import { DateObject } from "react-multi-date-picker"
-import persian from "react-date-object/calendars/persian"
-import persian_fa from "react-date-object/locales/persian_fa"
-import { toPersianDigits } from "@/utils/locale"
-import TextField from "@/components/Global/Form/TextField"
+"use client";
+import { useGetExperienceCreationDataQuery } from "@/api";
+import DatePicker from "@/components/Global/Form/DatePicker";
+import Form from "@/components/Global/Form/FormWrapper";
+import { NumberInput } from "@/components/Global/Form/NumberInput";
+import TrashIcon from "@/components/Global/Icons/TrashIcon";
+import { baseUrl, create_exp_form_validation_schema } from "@/constants";
+import { FieldArray, FormikProps } from "formik";
+import { useCallback, useEffect, useRef } from "react";
+import { DateObject } from "react-multi-date-picker";
+import persian from "react-date-object/calendars/persian";
+import persian_fa from "react-date-object/locales/persian_fa";
+import { toPersianDigits } from "@/utils/locale";
+import TextField from "@/components/Global/Form/TextField";
 import {
-  Box,
   Button,
   Card,
   CardContent,
@@ -21,66 +20,64 @@ import {
   MenuItem,
   Typography,
   TextField as MUITextField,
-} from "@mui/material"
-import { RootState } from "@/store"
-import { useDispatch, useSelector } from "react-redux"
-import { setFormValues } from "./create.slice"
-import { useRouter } from "next/navigation"
-import AutoComplete from "@/components/Global/Form/AutoComplete"
-
-// creatorId: 01JSVKNNAXDZNZ5NBDTSAZKWPM
+} from "@mui/material";
+import { RootState } from "@/store";
+import { useDispatch, useSelector } from "react-redux";
+import { setFormValues } from "./create.slice";
+import { useRouter } from "next/navigation";
+import Autocomplete from "@/components/Global/Form/Autocomplete";
 
 export default function ExperienceForm() {
-  const formValues = useSelector((state: RootState) => state.createExp.form)
-  const dispatch = useDispatch()
-  const router = useRouter()
+  const formValues = useSelector((state: RootState) => state.createExp.form);
+  const dispatch = useDispatch();
+  const router = useRouter();
 
   const handleSubmit = useCallback(
     (data: typeof formValues) => {
-      console.log(data)
-      dispatch(setFormValues(data))
-      router.push("/create/confirm")
+      console.log(data);
+      dispatch(setFormValues(data));
+      router.push("/create/confirm");
     },
     [dispatch, router]
-  )
-  const { data, isLoading } = useGetExperienceCreationDataQuery()
+  );
+  const { data, isLoading } = useGetExperienceCreationDataQuery();
 
   useEffect(() => {
-    const now = new DateObject({ calendar: persian, locale: persian_fa })
-    now.add(1, "day")
+    const now = new DateObject({ calendar: persian, locale: persian_fa });
+    now.add(1, "day");
     while (now.weekDay.index !== 0) {
-      now.add(1, "day")
+      now.add(1, "day");
     }
-    now.setHour(9).setMinute(0).setSecond(0)
+    now.setHour(9).setMinute(0).setSecond(0);
     formikRef.current?.setFieldValue(
       "sessions[0].publishTime.date",
       now.format()
-    )
+    );
     formikRef.current?.setFieldValue(
       "sessions[0].publishTime.time",
       toPersianDigits("9:00")
-    )
-  }, [])
+    );
+  }, []);
 
-  const formikRef = useRef<FormikProps<typeof formValues>>(null)
+  const formikRef = useRef<FormikProps<typeof formValues>>(null);
 
   const getVenue = useCallback(
     (venueId: number) => {
-      return data?.result.venues.find((venue) => venue.id === venueId)
+      return data?.result.venues.find((venue) => venue.id === venueId);
     },
     [data?.result.venues]
-  )
+  );
   const getDirector = useCallback(
     (directorId: string) => {
       return data?.result.directors.find(
         (director) => director.userId === directorId
-      )
+      );
     },
     [data?.result.directors]
-  )
+  );
 
   return (
-    <div className="mx-auto max-w-3xl mt-5 border-1 border-gray-400 rounded-sm">
+    <div className="mx-auto max-w-3xl mt-5 md:border-1 border-gray-400 rounded-sm">
       <Form
         initialValues={formValues}
         onSubmit={handleSubmit}
@@ -104,6 +101,28 @@ export default function ExperienceForm() {
               minRows={3}
               multiline
             />
+            <TextField
+              name="category.id"
+              label="دسته بندی"
+              select
+              className="col-span-12 sm:col-span-6"
+              onChange={(val) => {
+                setFieldValue("category.id", val.target.value);
+                setFieldValue(
+                  "category.title",
+                  data?.result.categories.find(
+                    (cat) => cat.id === Number(val.target.value)
+                  )?.title || ""
+                );
+              }}
+            >
+              <MenuItem value={-1} />
+              {data?.result.categories.map((cat) => (
+                <MenuItem key={`cat-${cat.title}`} value={cat.id}>
+                  {cat.title}
+                </MenuItem>
+              ))}
+            </TextField>
             <FieldArray name="faqs">
               {({ push, remove }) => (
                 <div className="col-span-12">
@@ -170,6 +189,7 @@ export default function ExperienceForm() {
                       name={`sessions[${index}].duration`}
                       label="مدت زمان تجربه (ساعت)"
                       className="col-span-12 sm:col-span-6"
+                      type="number"
                     />
                     <TextField
                       multiline
@@ -178,11 +198,11 @@ export default function ExperienceForm() {
                       label="توضیحات"
                       className="col-span-12 md:col-span-6"
                     />
-                    <AutoComplete
+                    <Autocomplete
                       name={`sessions[${index}].categories`}
                       className="col-span-12 md:col-span-6"
                       multiple
-                      options={data?.result.categories || []}
+                      options={data?.result.inclusions || []}
                       getOptionLabel={(option) => option.title}
                       defaultValue={[]}
                       filterSelectedOptions
@@ -218,31 +238,31 @@ export default function ExperienceForm() {
                         select
                         className="col-span-12 sm:col-span-6"
                         onChange={(e) => {
-                          const directorId = String(e.target.value)
+                          const directorId = String(e.target.value);
                           setFieldValue(
                             `sessions[${index}].director.userId`,
                             directorId
-                          )
+                          );
 
-                          const director = getDirector(directorId)
+                          const director = getDirector(directorId);
                           setFieldValue(
                             `sessions[${index}].director.name`,
                             director?.name ?? ""
-                          )
+                          );
                           setFieldValue(
                             `sessions[${index}].director.bio`,
                             director?.bio ?? ""
-                          )
+                          );
                           setFieldValue(
                             `sessions[${index}].director.photoUrl`,
                             director?.photoUrl ?? ""
-                          )
+                          );
                         }}
                       >
                         <MenuItem value={-1}></MenuItem>
                         {data?.result.directors.map((director) => (
                           <MenuItem
-                            key={`mamad-${director.name}`}
+                            key={`directors-${director.name}`}
                             value={director.userId}
                           >
                             {director.name}
@@ -264,7 +284,7 @@ export default function ExperienceForm() {
                           }`}
                           alt={`تصویر ${values.sessions[index].director.name}`}
                         />
-                        <Box sx={{ display: "flex", flexDirection: "column" }}>
+                        <div className="flex flex-col">
                           <CardContent sx={{ flex: "1 0 auto" }}>
                             <Typography component="div" variant="h5">
                               {values.sessions[index].director.name || ""}
@@ -277,7 +297,7 @@ export default function ExperienceForm() {
                               {values.sessions[index].director.bio || ""}
                             </Typography>
                           </CardContent>
-                        </Box>
+                        </div>
                       </Card>
                     )}
                     {data?.result && (
@@ -287,24 +307,24 @@ export default function ExperienceForm() {
                         select
                         className="col-span-12 sm:col-span-6"
                         onChange={(e) => {
-                          const venueId = Number(e.target.value)
-                          setFieldValue(`sessions[${index}].venue.id`, venueId)
+                          const venueId = Number(e.target.value);
+                          setFieldValue(`sessions[${index}].venue.id`, venueId);
 
-                          const venue = getVenue(venueId)
+                          const venue = getVenue(venueId);
                           setFieldValue(
                             `sessions[${index}].venue.title`,
                             venue?.title ?? ""
-                          )
+                          );
                           setFieldValue(
                             `sessions[${index}].venue.address`,
                             venue?.address ?? ""
-                          )
+                          );
                         }}
                       >
                         <MenuItem value={-1}></MenuItem>
                         {data?.result.venues.map((venue) => (
                           <MenuItem
-                            key={`mamad-${venue.title}`}
+                            key={`venue-${venue.title}`}
                             value={venue.id}
                           >
                             {venue.title}
@@ -336,9 +356,9 @@ export default function ExperienceForm() {
             </FieldArray>
             <Button
               onClick={() => {
-                formikRef.current?.submitForm()
-                console.log(formikRef.current?.values)
-                console.log(formikRef.current?.errors)
+                formikRef.current?.submitForm();
+                console.log(formikRef.current?.values);
+                console.log(formikRef.current?.errors);
               }}
             >
               ثبت
@@ -347,5 +367,5 @@ export default function ExperienceForm() {
         )}
       </Form>
     </div>
-  )
+  );
 }

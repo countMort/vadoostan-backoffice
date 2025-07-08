@@ -1,13 +1,13 @@
 import { AutocompleteProps } from "@/types/form"
-import { Autocomplete as MUIAutocomplete } from "@mui/material"
+import { ChipTypeMap, Autocomplete as MUIAutocomplete } from "@mui/material"
 import { useField } from "formik"
 
-export default function AutoComplete<
+export default function Autocomplete<
   Value,
-  Multiple extends boolean | undefined,
-  DisableClearable extends boolean | undefined,
-  FreeSolo extends boolean | undefined,
-  ChipComponent extends React.ElementType = "div"
+  Multiple extends boolean | undefined = false,
+  DisableClearable extends boolean | undefined = false,
+  FreeSolo extends boolean | undefined = false,
+  ChipComponent extends React.ElementType = ChipTypeMap["defaultComponent"]
 >({
   name,
   ...props
@@ -33,6 +33,7 @@ export default function AutoComplete<
       renderInput={(params) =>
         props.renderInput?.({
           ...params,
+          // @ts-expect-error customization
           error: showError,
           helperText: showError ? meta.error : "",
         })
