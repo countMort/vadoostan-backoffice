@@ -1,0 +1,4 @@
+/* 1rem = 16px */
+@theme {
+  --radius-exp: 0.625rem;
+}

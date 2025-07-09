@@ -1,5 +1,5 @@
 import { mainApi } from "@/api";
-import createExpReducer from "@/app/create/create.slice";
+import createExpReducer from "@/app/experiences/create/create.slice";
 import globalReducer from "@/app/global.slice";
 import { configureStore } from "@reduxjs/toolkit";
 

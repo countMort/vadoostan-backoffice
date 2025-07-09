@@ -1,5 +1,6 @@
 "use client";
 
+import { experience_create_route } from "@/constants/route-names";
 import { Button, Typography } from "@mui/material";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -26,7 +27,7 @@ export default function Home() {
   return (
     <div className="p-4 text-center h-[100vh] flex items-center justify-center flex-col">
       <Typography fontSize={14}>سلام {user?.first_name} 👋</Typography>
-      <Button component={Link} href="/create">
+      <Button component={Link} href={experience_create_route}>
         ساخت تجربه جدید
       </Button>
     </div>

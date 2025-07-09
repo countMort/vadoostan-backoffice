@@ -16,6 +16,7 @@ import gregorian_en from "react-date-object/locales/gregorian_en";
 import { useCreateExperienceMutation } from "@/api";
 import { toast } from "react-toastify";
 import { RootState } from "@/store";
+import { experience_create_route } from "@/constants/route-names";
 
 const items = ["تصویر 1", "تصویر 2", "تصویر 3"];
 
@@ -84,10 +85,10 @@ export default function Confirm() {
     back();
   };
 
-  if (!data.title) return redirect("/create");
+  if (!data.title) return redirect(experience_create_route);
 
   return (
-    <div className="mx-auto max-w-3xl mt-5 border-1 border-gray-400 rounded-sm">
+    <>
       <Slider {...settings}>
         {items.map((item, idx) => (
           <Card key={idx} sx={{ m: 2 }}>
@@ -177,6 +178,6 @@ export default function Confirm() {
           انصراف
         </Button>
       </div>
-    </div>
+    </>
   );
 }

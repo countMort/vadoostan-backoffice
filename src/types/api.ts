@@ -50,3 +50,13 @@ export interface CreateExperienceBody {
     assistantsUserId: string[];
   }[];
 }
+
+export interface GetExperiencesArgs {
+  status: ExperienceStatus;
+}
+
+export enum ExperienceStatus {
+  PUBLISHED = "published",
+  INACTIVE = "inactive",
+  READY_TO_PUBLISH = "ready_to_publish",
+}

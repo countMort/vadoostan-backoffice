@@ -1,6 +1,7 @@
 import { RootState } from "@/store";
 import {
   CreateExperienceBody,
+  GetExperiencesArgs,
   Response,
   UseGetExperienceCreationDataQueryResponse,
 } from "@/types/api";
@@ -42,10 +43,17 @@ export const mainApi = createApi({
         body,
       }),
     }),
+    getExperiences: build.query<any, any>({
+      query: ({ status }: GetExperiencesArgs) => ({
+        url: "/admin/experiences",
+        params: { status },
+      }),
+    }),
   }),
 });
 
 export const {
   useGetExperienceCreationDataQuery,
   useCreateExperienceMutation,
+  useGetExperiencesQuery,
 } = mainApi;
