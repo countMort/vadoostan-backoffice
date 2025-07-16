@@ -3,40 +3,23 @@ import * as Yup from "yup";
 export const hostName = "141.11.37.39";
 export const baseUrl = "http://" + hostName;
 
-export const categories = [
-  {
-    id: 1,
-    title: "موسیقی",
-  },
-  {
-    id: 2,
-    title: "بازی",
-  },
-  {
-    id: 3,
-    title: "خلق",
-  },
-  {
-    id: 4,
-    title: "فیلم",
-  },
-  {
-    id: 5,
-    title: "آشپزی",
-  },
-];
+export const catDic = {
+  music: "موسیقی",
+  movie: "فیلم",
+};
 
 export const create_exp_form_initial_values = {
   title: "",
   description: "",
   faqs: [
     {
+      // id: undefined as number | undefined,
       question: "",
       answer: "",
     },
   ],
-  category: { id: -1, title: "" } as {
-    id: number;
+  category: { id: "", title: "" } as {
+    id: number | "";
     title: string;
   },
   sessions: [
@@ -52,7 +35,7 @@ export const create_exp_form_initial_values = {
       },
       groupLink: "",
       venue: {
-        id: -1,
+        id: "" as number | "",
         title: "",
         address: "",
       },
@@ -68,6 +51,7 @@ export const create_exp_form_initial_values = {
       }[],
     },
   ],
+  images: [] as File[],
 };
 
 export const create_exp_form_validation_schema = Yup.object({
@@ -78,7 +62,7 @@ export const create_exp_form_validation_schema = Yup.object({
     .max(400, "تعداد کارکتر از 400 بیشتر نمی‌تواند باشد.")
     .required("توضیحات الزامی است."),
   category: Yup.object({
-    id: Yup.number().required().not([-1], "دسته بندی قبیله مورد نیاز است."),
+    id: Yup.number().required("دسته بندی قبیله مورد نیاز است."),
   }),
   faqs: Yup.array()
     .of(
@@ -97,9 +81,7 @@ export const create_exp_form_validation_schema = Yup.object({
         duration: Yup.string().required("مدت زمان تجربه الزامی است."),
         time: Yup.string().required("تاریخ برگزاری مورد نیاز است."),
         venue: Yup.object({
-          id: Yup.number()
-            .required()
-            .not([-1], "محل برگزاری تجربه مورد نیاز است."),
+          id: Yup.number().required("محل برگزاری تجربه مورد نیاز است."),
         }).required("محل برگزاری تجربه مورد نیاز است."),
         price: Yup.number()
           .required("هزینه جلسه مورد نیاز است.")
@@ -113,6 +95,15 @@ export const create_exp_form_validation_schema = Yup.object({
       })
     )
     .min(1, "حداقل یک جلسه باید تعریف شود."),
+  images: Yup.array().of(
+    Yup.mixed().test(
+      "fileSize",
+      "حجم فایل بالاست (max 1 MB)",
+      (file) => !file || (file as File).size <= 1 * 1024 * 1024 // 1 MB
+    )
+  ),
+  // .min(1, "At least one file required"),
 });
 
-export const time_format = "DD/MM/YYYY HH:mm:ss";
+export const time_format = "YYYY/MM/DD HH:mm:ss";
+export const be_time_format = "YYYY-MM-DDTHH:mm:ss.000Z";

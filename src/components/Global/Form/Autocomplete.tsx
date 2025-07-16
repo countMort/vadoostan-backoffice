@@ -21,7 +21,6 @@ export default function Autocomplete<
   const [field, meta, helpers] = useField(name)
 
   const showError = Boolean(meta.touched && meta.error)
-
   return (
     <MUIAutocomplete
       {...props}

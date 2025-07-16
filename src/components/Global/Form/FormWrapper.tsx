@@ -1,6 +1,6 @@
-import { FormProps } from "@/types/form";
-import { Formik, Form, FormikValues } from "formik";
-import Spinner from "@/components/Global/Spinner/Spinner";
+import { FormProps } from "@/types/form"
+import { Formik, Form, FormikValues } from "formik"
+import Spinner from "@/components/Global/Spinner/Spinner"
 
 const FormWrapper = <T extends FormikValues>({
   initialValues,
@@ -37,7 +37,7 @@ const FormWrapper = <T extends FormikValues>({
         <Spinner className="absolute -translate-x-1/2 -translate-y-1/2 top-2/4 left-1/2" />
       )}
     </div>
-  );
-};
+  )
+}
 
-export default FormWrapper;
+export default FormWrapper

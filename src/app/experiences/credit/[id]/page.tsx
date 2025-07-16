@@ -1,17 +1,17 @@
-"use client";
-import { useGetExperienceCreationDataQuery } from "@/api";
-import DatePicker from "@/components/Global/Form/DatePicker";
-import Form from "@/components/Global/Form/FormWrapper";
-import { NumberInput } from "@/components/Global/Form/NumberInput";
-import TrashIcon from "@/components/Global/Icons/TrashIcon";
-import { baseUrl, create_exp_form_validation_schema } from "@/constants";
-import { FieldArray, FormikProps } from "formik";
-import { useCallback, useEffect, useRef } from "react";
-import { DateObject } from "react-multi-date-picker";
-import persian from "react-date-object/calendars/persian";
-import persian_fa from "react-date-object/locales/persian_fa";
-import { toPersianDigits } from "@/utils/locale";
-import TextField from "@/components/Global/Form/TextField";
+"use client"
+import { useGetExperienceCreationDataQuery, useGetExperienceQuery } from "@/api"
+import DatePicker from "@/components/Global/Form/DatePicker"
+import Form from "@/components/Global/Form/FormWrapper"
+import { NumberInput } from "@/components/Global/Form/NumberInput"
+import TrashIcon from "@/components/Global/Icons/TrashIcon"
+import { baseUrl, create_exp_form_validation_schema } from "@/constants"
+import { FieldArray, FormikProps } from "formik"
+import { use, useCallback, useEffect, useRef } from "react"
+import { DateObject } from "react-multi-date-picker"
+import persian from "react-date-object/calendars/persian"
+import persian_fa from "react-date-object/locales/persian_fa"
+import { toPersianDigits } from "@/utils/locale"
+import TextField from "@/components/Global/Form/TextField"
 import {
   Button,
   Card,
@@ -20,61 +20,92 @@ import {
   MenuItem,
   Typography,
   TextField as MUITextField,
-} from "@mui/material";
-import { RootState } from "@/store";
-import { useDispatch, useSelector } from "react-redux";
-import { setFormValues } from "./create.slice";
-import { useRouter } from "next/navigation";
-import Autocomplete from "@/components/Global/Form/Autocomplete";
-import { experience_create_confirm_route } from "@/constants/route-names";
+} from "@mui/material"
+import { RootState } from "@/store"
+import { useDispatch, useSelector } from "react-redux"
+import { setFormValues } from "./create.slice"
+import Autocomplete from "@/components/Global/Form/Autocomplete"
+import { experience_credit_confirm_route } from "@/constants/route-names"
+import FileInput from "@/components/Global/Form/FileInput"
+import { getFiles, setFiles, transformDataToForm } from "./utils"
+import { useRouter } from "next/navigation"
 
-export default function ExperienceForm() {
-  const formValues = useSelector((state: RootState) => state.createExp.form);
-  const dispatch = useDispatch();
-  const router = useRouter();
+export default function ExperienceForm({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}) {
+  const router = useRouter()
+  const { id: expId } = use(params)
+  const isEdit = expId !== "0"
+  const formikRef = useRef<FormikProps<typeof formValues>>(null)
 
-  const handleSubmit = useCallback(
-    (data: typeof formValues) => {
-      dispatch(setFormValues(data));
-      router.push(experience_create_confirm_route);
+  const { data: { result: edittingData } = {} } = useGetExperienceQuery(
+    {
+      expId,
     },
-    [dispatch, router]
-  );
-  const { data, isLoading } = useGetExperienceCreationDataQuery();
+    {
+      skip: !isEdit,
+    }
+  )
+  const { data: creationData, isLoading } = useGetExperienceCreationDataQuery()
+
+  const previousData = useSelector((state: RootState) => state.createExp.form)
 
   useEffect(() => {
-    const now = new DateObject({ calendar: persian, locale: persian_fa });
-    now.add(1, "day");
-    while (now.weekDay.index !== 0) {
-      now.add(1, "day");
+    if (edittingData && creationData) {
+      formikRef.current?.setValues(
+        transformDataToForm(edittingData, creationData.result)
+      )
     }
-    now.setHour(9).setMinute(0).setSecond(0);
+  }, [creationData, edittingData])
+
+  const formValues = {
+    ...previousData,
+    images: getFiles(),
+  }
+  const dispatch = useDispatch()
+
+  const handleSubmit = useCallback(
+    ({ images, ...data }: typeof formValues) => {
+      dispatch(setFormValues({ ...data, images: [] }))
+      router.push(experience_credit_confirm_route(isEdit ? expId : "0"))
+      setFiles(images)
+    },
+    [dispatch, expId, isEdit, router]
+  )
+
+  useEffect(() => {
+    const now = new DateObject({ calendar: persian, locale: persian_fa })
+    now.add(1, "day")
+    while (now.weekDay.index !== 0) {
+      now.add(1, "day")
+    }
+    now.setHour(9).setMinute(0).setSecond(0)
     formikRef.current?.setFieldValue(
       "sessions[0].publishTime.date",
       now.format()
-    );
+    )
     formikRef.current?.setFieldValue(
       "sessions[0].publishTime.time",
       toPersianDigits("9:00")
-    );
-  }, []);
-
-  const formikRef = useRef<FormikProps<typeof formValues>>(null);
+    )
+  }, [])
 
   const getVenue = useCallback(
-    (venueId: number) => {
-      return data?.result.venues.find((venue) => venue.id === venueId);
+    (venueId: number | "") => {
+      return creationData?.result.venues.find((venue) => venue.id === venueId)
     },
-    [data?.result.venues]
-  );
+    [creationData?.result.venues]
+  )
   const getDirector = useCallback(
     (directorId: string) => {
-      return data?.result.directors.find(
+      return creationData?.result.directors.find(
         (director) => director.userId === directorId
-      );
+      )
     },
-    [data?.result.directors]
-  );
+    [creationData?.result.directors]
+  )
 
   return (
     <Form
@@ -106,17 +137,17 @@ export default function ExperienceForm() {
             select
             className="col-span-12 sm:col-span-6"
             onChange={(val) => {
-              setFieldValue("category.id", val.target.value);
+              setFieldValue("category.id", val.target.value)
               setFieldValue(
                 "category.title",
-                data?.result.categories.find(
+                creationData?.result.categories.find(
                   (cat) => cat.id === Number(val.target.value)
                 )?.title || ""
-              );
+              )
             }}
           >
-            <MenuItem value={-1} />
-            {data?.result.categories.map((cat) => (
+            <MenuItem value={""} />
+            {creationData?.result.categories.map((cat) => (
               <MenuItem key={`cat-${cat.title}`} value={cat.id}>
                 {cat.title}
               </MenuItem>
@@ -175,7 +206,7 @@ export default function ExperienceForm() {
                     classNames={{ wrapper: "col-span-12 sm:col-span-6" }}
                   />
                   <NumberInput
-                    name={`sessions[${index}.capacity]`}
+                    name={`sessions[${index}].capacity`}
                     label="ظرفیت (نفر)"
                     classNames={{ wrapper: "col-span-12 sm:col-span-6" }}
                   />
@@ -190,18 +221,18 @@ export default function ExperienceForm() {
                     className="col-span-12 sm:col-span-6"
                     type="number"
                   />
-                  <TextField
+                  {/* <TextField
                     multiline
                     rows={3}
                     name={`sessions[${index}].description`}
                     label="توضیحات"
                     className="col-span-12 md:col-span-6"
-                  />
+                  /> */}
                   <Autocomplete
-                    name={`sessions[${index}].categories`}
+                    name={`sessions[${index}].inclusions`}
                     className="col-span-12 md:col-span-6"
                     multiple
-                    options={data?.result.inclusions || []}
+                    options={creationData?.result.inclusions || []}
                     getOptionLabel={(option) => option.title}
                     defaultValue={[]}
                     filterSelectedOptions
@@ -230,36 +261,36 @@ export default function ExperienceForm() {
                     disabled
                     className="col-span-12 sm:col-span-6"
                   />
-                  {data?.result && (
+                  {creationData?.result && (
                     <TextField
                       name={`sessions[${index}].director.userId`}
                       label="تجربه گردان"
                       select
                       className="col-span-12 sm:col-span-6"
                       onChange={(e) => {
-                        const directorId = String(e.target.value);
+                        const directorId = String(e.target.value)
                         setFieldValue(
                           `sessions[${index}].director.userId`,
                           directorId
-                        );
+                        )
 
-                        const director = getDirector(directorId);
+                        const director = getDirector(directorId)
                         setFieldValue(
                           `sessions[${index}].director.name`,
                           director?.name ?? ""
-                        );
+                        )
                         setFieldValue(
                           `sessions[${index}].director.bio`,
                           director?.bio ?? ""
-                        );
+                        )
                         setFieldValue(
                           `sessions[${index}].director.photoUrl`,
                           director?.photoUrl ?? ""
-                        );
+                        )
                       }}
                     >
                       <MenuItem value={-1}></MenuItem>
-                      {data?.result.directors.map((director) => (
+                      {creationData?.result.directors.map((director) => (
                         <MenuItem
                           key={`directors-${director.name}`}
                           value={director.userId}
@@ -299,29 +330,29 @@ export default function ExperienceForm() {
                       </div>
                     </Card>
                   )}
-                  {data?.result && (
+                  {creationData?.result && (
                     <TextField
                       name={`sessions[${index}].venue.id`}
                       label="محل برگزاری"
                       select
                       className="col-span-12 sm:col-span-6"
                       onChange={(e) => {
-                        const venueId = Number(e.target.value);
-                        setFieldValue(`sessions[${index}].venue.id`, venueId);
+                        const venueId = Number(e.target.value)
+                        setFieldValue(`sessions[${index}].venue.id`, venueId)
 
-                        const venue = getVenue(venueId);
+                        const venue = getVenue(venueId)
                         setFieldValue(
                           `sessions[${index}].venue.title`,
                           venue?.title ?? ""
-                        );
+                        )
                         setFieldValue(
                           `sessions[${index}].venue.address`,
                           venue?.address ?? ""
-                        );
+                        )
                       }}
                     >
-                      <MenuItem value={-1}></MenuItem>
-                      {data?.result.venues.map((venue) => (
+                      <MenuItem value={""}></MenuItem>
+                      {creationData?.result.venues.map((venue) => (
                         <MenuItem key={`venue-${venue.title}`} value={venue.id}>
                           {venue.title}
                         </MenuItem>
@@ -346,13 +377,18 @@ export default function ExperienceForm() {
                     }
                     className="col-span-12 sm:col-span-6"
                   />
+                  <FileInput
+                    label="عکس های تجربه"
+                    name="images"
+                    classNames={{ wrapper: "col-span-12 sm:col-span-6" }}
+                  />
                 </div>
               ))
             }
           </FieldArray>
           <Button
             onClick={() => {
-              formikRef.current?.submitForm();
+              formikRef.current?.submitForm()
             }}
           >
             ثبت
@@ -360,5 +396,5 @@ export default function ExperienceForm() {
         </>
       )}
     </Form>
-  );
+  )
 }

@@ -1,104 +1,142 @@
-"use client";
+"use client"
 
-import { useDispatch, useSelector } from "react-redux";
-import Slider, { Settings } from "react-slick";
-import { Button, Card, CardContent, Divider, Typography } from "@mui/material";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import { baseUrl } from "@/constants";
-import FestIcon from "@/components/Global/Icons/FestIcon";
-import Image from "next/image";
-import { customDate } from "@/components/Global/Form/DatePicker";
-import { resetForm } from "../create.slice";
-import { redirect, useRouter } from "next/navigation";
-import gregorian from "react-date-object/calendars/gregorian";
-import gregorian_en from "react-date-object/locales/gregorian_en";
-import { useCreateExperienceMutation } from "@/api";
-import { toast } from "react-toastify";
-import { RootState } from "@/store";
-import { experience_create_route } from "@/constants/route-names";
+import { useDispatch, useSelector } from "react-redux"
+import Slider, { Settings } from "react-slick"
+import { Button, Divider, Typography } from "@mui/material"
+import "slick-carousel/slick/slick.css"
+import "slick-carousel/slick/slick-theme.css"
+import { baseUrl, be_time_format } from "@/constants"
+import FestIcon from "@/components/Global/Icons/FestIcon"
+import Image from "next/image"
+import { customDate } from "@/components/Global/Form/DatePicker"
+import { resetForm } from "../create.slice"
+import { redirect, useRouter } from "next/navigation"
+import gregorian from "react-date-object/calendars/gregorian"
+import gregorian_en from "react-date-object/locales/gregorian_en"
+import {
+  useAddExperiencePhotosMutation,
+  useCreateExperienceMutation,
+  useUpdateExperienceMutation,
+} from "@/api"
+import { toast } from "react-toastify"
+import { RootState } from "@/store"
+import { experience_create_route } from "@/constants/route-names"
+import { getFiles, resetFiles } from "../utils"
+import { use } from "react"
 
-const items = ["تصویر 1", "تصویر 2", "تصویر 3"];
+const slider_settings: Settings = {
+  infinite: false,
+  slidesToShow: 1,
+  slidesToScroll: 1,
+  arrows: false,
+  dots: false,
+}
 
-export default function Confirm() {
-  const data = useSelector((state: RootState) => state.createExp.form);
-  const router = useRouter();
-  const time = customDate(data.sessions[0].time);
+export default function Confirm({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}) {
+  const { id: expId } = use(params)
+  const isEdit = expId !== "0"
+
+  const data = useSelector((state: RootState) => state.createExp.form)
+  const images = getFiles()
+  const router = useRouter()
+  const time = customDate(data.sessions[0].time, {
+    locale: "fa",
+  })
   const publishTime = customDate(
-    data.sessions[0].publishTime.date + " " + data.sessions[0].publishTime.time
-  );
-  const settings: Settings = {
-    infinite: true,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    arrows: false,
-  };
+    data.sessions[0].publishTime.date + " " + data.sessions[0].publishTime.time,
+    { locale: "fa" }
+  )
 
-  const [createXP, { isLoading }] = useCreateExperienceMutation();
+  const [createExp, { isLoading: isCreating }] = useCreateExperienceMutation()
+  const [updateExp, { isLoading: isUpdating }] = useUpdateExperienceMutation()
+  const [upload, { isLoading: isUploading }] = useAddExperiencePhotosMutation()
 
   const submit = async () => {
     const body = {
       title: data.title,
       description: data.description,
-      categoryId: data.category.id,
+      categoryId: Number(data.category.id),
       faqs: data.faqs,
       isSeries: false,
       creatorUserId: "01JSVKNNAXDZNZ5NBDTSAZKWPM",
       sessions: [
         {
-          time: time
-            .convert(gregorian, gregorian_en)
-            .format("YYYY-MM-DD hh:mm:ss"),
+          time: time.convert(gregorian, gregorian_en).format(be_time_format),
           publishTime: publishTime
             .convert(gregorian, gregorian_en)
-            .format("YYYY-MM-DD hh:mm:ss"),
+            .format(be_time_format),
           description: data.sessions[0].description,
           duration: Number(data.sessions[0].duration),
-          venueId: data.sessions[0].venue.id,
+          venueId: Number(data.sessions[0].venue.id),
           price: Number(data.sessions[0].price),
           capacity: Number(data.sessions[0].capacity),
           groupLink: data.sessions[0].groupLink,
           allowedGender: "all",
           directorsUserId: [data.sessions[0].director.userId],
           assistantsUserId: [] as string[],
+          inclusionItemsId: data.sessions[0].inclusions.map((inc) => inc.id),
         },
       ],
-    };
-    try {
-      const result = await createXP(body).unwrap();
-      toast(result.message);
-      setTimeout(() => {
-        cancel();
-      }, 1000);
-    } catch (error: any) {
-      console.log(error);
     }
-  };
+    try {
+      if (isEdit) {
+        await updateExp({ exp: body, expId }).unwrap()
+        toast("تجربه بروز شد.")
+      } else {
+        const result = await createExp(body).unwrap()
+        toast("تجربه ساخته شد.")
+        const formData = new FormData()
+        images.forEach((img) => formData.append("files", img))
+        await upload({ expId: result.result.expId, formData })
+          .unwrap()
+          .catch(() => {
+            toast("مشکلی در آپلود عکس ها به وجود آمد.")
+          })
+      }
+      setTimeout(() => {
+        cancel()
+      }, 1000)
+    } catch (error: any) {
+      console.log(error)
+    }
+  }
 
   const back = () => {
-    router.back();
-  };
+    router.back()
+  }
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
   const cancel = () => {
-    dispatch(resetForm());
-    back();
-  };
+    dispatch(resetForm())
+    resetFiles()
+    back()
+  }
 
-  if (!data.title) return redirect(experience_create_route);
+  if (!data.title) return redirect(experience_create_route)
 
   return (
     <>
-      <Slider {...settings}>
-        {items.map((item, idx) => (
-          <Card key={idx} sx={{ m: 2 }}>
-            <CardContent>
-              <Typography>{item}</Typography>
-            </CardContent>
-          </Card>
-        ))}
-      </Slider>
-      <div className="px-[40px]">
+      {images.length ? (
+        <Slider {...slider_settings}>
+          {images.map((file, idx) => (
+            <Image
+              key={`تصویر ${idx}`}
+              src={URL.createObjectURL(file)}
+              alt={`تصویر ${idx}`}
+              className="object-contain"
+              width={200}
+              height={200}
+            />
+          ))}
+        </Slider>
+      ) : (
+        <></>
+      )}
+      <div className="px-10">
         <Typography>{data.title}</Typography>
         <div className="flex">
           <Typography fontSize={14}>
@@ -167,8 +205,12 @@ export default function Confirm() {
         </div>
         <Typography fontSize={12}>{data.sessions[0].director.bio}</Typography>
       </div>
-      <div className="flex justify-center gap-x-1 sm:gap-x-2 fixed bottom-0 left-0 w-full py-2 z-50">
-        <Button variant="outlined" onClick={submit} loading={isLoading}>
+      <div className="flex justify-center gap-x-1 sm:gap-x-2 py-2 mt-2">
+        <Button
+          variant="outlined"
+          onClick={submit}
+          loading={isCreating || isUploading || isUpdating}
+        >
           ثبت
         </Button>
         <Button variant="outlined" onClick={back}>
@@ -179,5 +221,5 @@ export default function Confirm() {
         </Button>
       </div>
     </>
-  );
+  )
 }

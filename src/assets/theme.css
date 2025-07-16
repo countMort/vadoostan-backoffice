@@ -1,4 +1,16 @@
 /* 1rem = 16px */
 @theme {
-  --radius-exp: 0.625rem;
+  --radius-5: 0.3125rem;
+  --radius-10: 0.625rem;
+  --text-12: 0.75rem;
+  --text-14: 0.875rem;
+  --color-code-1: #284020;
+  --color-code-2: #324853;
+  --color-code-3: #ff7118;
+  --color-code-5: #331a1a;
+  --color-code-01: #ccffce;
+  --color-code-02: #c2eaff;
+  --color-code-03: #fae4d7;
+  --color-code-04: #a1c8f6;
+  --color-code-05: #ffcccc;
 }

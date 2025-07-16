@@ -1,7 +1,7 @@
-import { BaseInputProps } from "@/types/form";
-import { useField, useFormikContext } from "formik";
-import { NumericFormat } from "react-number-format";
-import FieldWrapper from "./Partials/FieldWrapper";
+import { BaseInputProps } from "@/types/form"
+import { useField } from "formik"
+import { NumericFormat } from "react-number-format"
+import FieldWrapper from "./Partials/FieldWrapper"
 
 export const NumberInput = ({
   name,
@@ -10,10 +10,8 @@ export const NumberInput = ({
   readonly,
   ...rest
 }: BaseInputProps) => {
-  const {} = useField(name);
-  const { setFieldValue, values, getFieldMeta } = useFormikContext();
-  const meta = getFieldMeta(name);
-  const showError = meta.touched && meta.error;
+  const [field, meta] = useField(name)
+  const showError = meta.touched && meta.error
   return (
     <FieldWrapper name={name} classNames={classNames} meta={meta} {...rest}>
       <NumericFormat
@@ -25,10 +23,12 @@ export const NumberInput = ({
         placeholder={placeholder}
         thousandSeparator
         name={name}
-        value={(values as any)[name]}
-        onValueChange={({ value }) => setFieldValue(name, value)}
+        value={field.value}
+        onValueChange={({ value }) => {
+          field.onChange({ target: { name, value } })
+        }}
         readOnly={readonly}
       />
     </FieldWrapper>
-  );
-};
+  )
+}
