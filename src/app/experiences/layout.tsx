@@ -1,7 +1,7 @@
 "use client"
 
 import { Button, ButtonGroup } from "@mui/material"
-import { ReactNode } from "react"
+import { ReactNode, Suspense } from "react"
 import {
   experiences_active_route,
   experiences_past_route,
@@ -16,7 +16,7 @@ const buttons = [
   { label: "تجربه‌های گذشته", path: experiences_past_route },
 ]
 
-export default function Layout({ children }: { children: ReactNode }) {
+function Layout({ children }: { children: ReactNode }) {
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const queryString = searchParams.toString()
@@ -32,13 +32,11 @@ export default function Layout({ children }: { children: ReactNode }) {
           {buttons.map((btn) => (
             <Button
               variant="text"
-              className={`grow ${
-                fullPathname === btn.path ? "dark:text-white" : ""
-              }`}
+              className={`grow`}
               key={"btn-" + btn.label}
               href={btn.path}
               component={Link}
-              disabled={fullPathname === btn.path}
+              disabled={fullPathname.includes(btn.path)}
             >
               {btn.label}
             </Button>
@@ -46,5 +44,13 @@ export default function Layout({ children }: { children: ReactNode }) {
         </ButtonGroup>
       </footer>
     </>
+  )
+}
+
+export default function LayoutWrapper({ children }: { children: ReactNode }) {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <Layout>{children}</Layout>
+    </Suspense>
   )
 }

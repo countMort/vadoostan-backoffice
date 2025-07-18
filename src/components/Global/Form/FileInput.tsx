@@ -1,26 +1,32 @@
-import Image from "next/image";
-import { ChangeEvent } from "react";
-import FieldWrapper from "./Partials/FieldWrapper";
-import { BaseInputProps } from "@/types/form";
-import { useField } from "formik";
+import { ChangeEvent } from "react"
+import FieldWrapper from "./Partials/FieldWrapper"
+import { BaseInputProps } from "@/types/form"
+import { useField } from "formik"
+import { FileInputPreview } from "./Partials/FileInputPreview"
 export default function FileInput({
   classNames,
   label = "Upload multiple files",
   name,
+  disabled,
+  ...rest
 }: BaseInputProps) {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const selected = e.target.files || [];
-    const fileList = Array.from(selected);
-    helpers.setValue([...files, ...fileList]);
-  };
+    const selected = e.target.files || []
+    const fileList = Array.from(selected)
+    helpers.setValue([...files, ...fileList])
+  }
   const handleRemove = (index: number) => {
-    const updated = files.filter((_, i) => i !== index);
-    helpers.setValue(updated);
-  };
-  const [field, meta, helpers] = useField(name);
-  const showError = meta.touched && meta.error;
+    const updated = files.filter((_, i) => i !== index)
+    helpers.setValue(updated)
+  }
+  const [field, meta, helpers] = useField(name)
+  const showError = meta.touched && meta.error
 
-  const files = (field.value as any[]) || [];
+  const files = (field.value as File[]) || []
+  const images = files.map((file) => ({
+    alt: file.name,
+    url: URL.createObjectURL(file),
+  }))
 
   return (
     <FieldWrapper label={label} meta={meta} classNames={classNames} name={name}>
@@ -33,27 +39,15 @@ export default function FileInput({
         multiple
         accept="image/*"
         onChange={handleChange}
+        disabled={disabled}
+        {...rest}
       />
-      <div className="flex flex-wrap gap-4 mt-2">
-        {files.map((file, idx) => (
-          <div key={idx} className="relative">
-            <Image
-              src={URL.createObjectURL(file)}
-              alt="Preview"
-              className="object-cover rounded"
-              width={96}
-              height={48}
-            />
-            <button
-              type="button"
-              onClick={() => handleRemove(idx)}
-              className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 text-xs"
-            >
-              ✕
-            </button>
-          </div>
-        ))}
-      </div>
+      <FileInputPreview
+        className="mt-2"
+        images={images}
+        disabled={disabled}
+        onRemove={handleRemove}
+      />
     </FieldWrapper>
-  );
+  )
 }

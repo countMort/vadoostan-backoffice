@@ -53,6 +53,8 @@ export interface CreateExperienceBody {
   }[]
 }
 
+export type UpdateExperienceBody = Omit<CreateExperienceBody, "creatorUserId">
+
 export interface CreateExperienceResponse {
   expId: string
 }
@@ -124,5 +126,20 @@ export interface BEExperience {
 
 export interface UpdateExperienceArgs {
   expId: string
-  exp: CreateExperienceBody
+  exp: UpdateExperienceBody
+}
+
+export interface GetExperienceRegistrationsArgs {
+  expId: string
+}
+
+export interface Attendee {
+  name: string
+  regStatus: string
+  mobileNumber: string
+  telegramUsername: string | null
+}
+export interface GetExperienceRegistrationsResponse {
+  remainingCapacity: number
+  attendees: Attendee[]
 }

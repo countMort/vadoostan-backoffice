@@ -10,6 +10,8 @@ import {
   Response,
   ExperienceCreationData,
   UpdateExperienceArgs,
+  GetExperienceRegistrationsArgs,
+  GetExperienceRegistrationsResponse,
 } from "@/types/api"
 import type { Action, PayloadAction } from "@reduxjs/toolkit"
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
@@ -25,13 +27,12 @@ export const mainApi = createApi({
     // baseUrl: `${baseUrl}/api`,
     baseUrl: "/api/", // Proxy in next.config
     prepareHeaders(headers, { endpoint }) {
-      if (endpoint === "addExperiencePhotos")
-        headers.set("Content-Type", "multipart/form-data")
-      else headers.set("Content-Type", "application/json")
-      headers.set(
-        "Authorization",
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIwMUpTVktOTkFYRFpOWjVOQkRUU0FaS1dQTSIsImNsaWVudCI6IndlYiIsImlhdCI6MTc1MTM3MzQwNn0.kiZlQquB_7bzZLOjem2B41xafF_h_6SUPqRuG5azBnQ"
-      )
+      if (endpoint !== "addExperiencePhotos")
+        headers.set(
+          "Authorization",
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIwMUpTVktOTkFYRFpOWjVOQkRUU0FaS1dQTSIsImNsaWVudCI6IndlYiIsImlhdCI6MTc1MTM3MzQwNn0.kiZlQquB_7bzZLOjem2B41xafF_h_6SUPqRuG5azBnQ"
+        )
+      return headers
     },
   }),
   extractRehydrationInfo(action, { reducerPath }): any {
@@ -86,6 +87,14 @@ export const mainApi = createApi({
         method: "PATCH",
       }),
     }),
+    getExperienceRegistrations: build.query<
+      Response<GetExperienceRegistrationsResponse>,
+      GetExperienceRegistrationsArgs
+    >({
+      query: ({ expId }) => ({
+        url: `/admin/experiences/${expId}/registrations`,
+      }),
+    }),
   }),
 })
 
@@ -96,4 +105,5 @@ export const {
   useAddExperiencePhotosMutation,
   useGetExperienceQuery,
   useUpdateExperienceMutation,
+  useGetExperienceRegistrationsQuery,
 } = mainApi

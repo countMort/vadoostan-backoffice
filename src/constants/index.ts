@@ -1,12 +1,12 @@
-import * as Yup from "yup";
+import * as Yup from "yup"
 
-export const hostName = "141.11.37.39";
-export const baseUrl = "http://" + hostName;
+export const hostName = "141.11.37.39"
+export const baseUrl = "http://" + hostName
 
 export const catDic = {
   music: "موسیقی",
   movie: "فیلم",
-};
+}
 
 export const create_exp_form_initial_values = {
   title: "",
@@ -19,11 +19,12 @@ export const create_exp_form_initial_values = {
     },
   ],
   category: { id: "", title: "" } as {
-    id: number | "";
-    title: string;
+    id: number | ""
+    title: string
   },
   sessions: [
     {
+      id: "",
       time: "",
       description: "",
       duration: 0,
@@ -46,13 +47,14 @@ export const create_exp_form_initial_values = {
         photoUrl: "",
       },
       inclusions: [] as {
-        id: number;
-        title: string;
+        id: number
+        title: string
       }[],
     },
   ],
   images: [] as File[],
-};
+  expPhotos: [] as { id: number; url: string }[],
+}
 
 export const create_exp_form_validation_schema = Yup.object({
   title: Yup.string().required("تیتر الزامی است."),
@@ -103,7 +105,7 @@ export const create_exp_form_validation_schema = Yup.object({
     )
   ),
   // .min(1, "At least one file required"),
-});
+})
 
-export const time_format = "YYYY/MM/DD HH:mm:ss";
-export const be_time_format = "YYYY-MM-DDTHH:mm:ss.000Z";
+export const time_format = "YYYY/MM/DD HH:mm:ss"
+export const be_time_format = "YYYY-MM-DDTHH:mm:ss.000Z"

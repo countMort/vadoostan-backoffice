@@ -1,5 +1,10 @@
 "use client"
-import { useGetExperienceCreationDataQuery, useGetExperienceQuery } from "@/api"
+import {
+  // useAddExperiencePhotosMutation,
+  useGetExperienceCreationDataQuery,
+  useGetExperienceQuery,
+  useGetExperienceRegistrationsQuery,
+} from "@/api"
 import DatePicker from "@/components/Global/Form/DatePicker"
 import Form from "@/components/Global/Form/FormWrapper"
 import { NumberInput } from "@/components/Global/Form/NumberInput"
@@ -29,6 +34,8 @@ import { experience_credit_confirm_route } from "@/constants/route-names"
 import FileInput from "@/components/Global/Form/FileInput"
 import { getFiles, setFiles, transformDataToForm } from "./utils"
 import { useRouter } from "next/navigation"
+import { FileInputPreview } from "@/components/Global/Form/Partials/FileInputPreview"
+import { RegistrationsList } from "@/components/experiences/RegistrationsList"
 
 export default function ExperienceForm({
   params,
@@ -37,7 +44,7 @@ export default function ExperienceForm({
 }) {
   const router = useRouter()
   const { id: expId } = use(params)
-  const isEdit = expId !== "0"
+  const isEdit = expId !== "create"
   const formikRef = useRef<FormikProps<typeof formValues>>(null)
 
   const { data: { result: edittingData } = {} } = useGetExperienceQuery(
@@ -49,6 +56,31 @@ export default function ExperienceForm({
     }
   )
   const { data: creationData, isLoading } = useGetExperienceCreationDataQuery()
+
+  const { data: { result: registrationsData } = {} } =
+    useGetExperienceRegistrationsQuery(
+      { expId },
+      {
+        skip: !isEdit,
+      }
+    )
+  // const [upload] = useAddExperiencePhotosMutation()
+
+  // const uploadImages = async () => {
+  //   const formData = new FormData()
+  //   formikRef.current?.values.images.forEach((img) => {
+  //     formData.append("files", img)
+  //   })
+  //   const result = await upload({
+  //     expId: "01K0AJ1E0KBC1MS9AK0JG9QNHS",
+  //     formData,
+  //   })
+  //     .unwrap()
+  //     .catch((err) => {
+  //       console.log(err)
+  //     })
+  //   console.log(result)
+  // }
 
   const previousData = useSelector((state: RootState) => state.createExp.form)
 
@@ -378,17 +410,37 @@ export default function ExperienceForm({
                     className="col-span-12 sm:col-span-6"
                   />
                   <FileInput
+                    disabled={isEdit}
                     label="عکس های تجربه"
                     name="images"
                     classNames={{ wrapper: "col-span-12 sm:col-span-6" }}
                   />
+                  {isEdit && formikRef.current && (
+                    <FileInputPreview
+                      className="col-span-12 sm:col-span-6"
+                      images={formikRef.current.values.expPhotos.map(
+                        (photo) => ({
+                          url: baseUrl + "/" + photo.url,
+                          alt: `photo-${photo.id}`,
+                        })
+                      )}
+                      disabled={isEdit}
+                    />
+                  )}
                 </div>
               ))
             }
           </FieldArray>
+          {registrationsData && registrationsData.attendees.length > 0 && (
+            <RegistrationsList
+              className="col-span-12 sm:col-span-6"
+              attendees={registrationsData.attendees}
+            />
+          )}
           <Button
             onClick={() => {
               formikRef.current?.submitForm()
+              // uploadImages()
             }}
           >
             ثبت

@@ -38,7 +38,7 @@ export default function Confirm({
   params: Promise<{ id: string }>
 }) {
   const { id: expId } = use(params)
-  const isEdit = expId !== "0"
+  const isEdit = expId !== "create"
 
   const data = useSelector((state: RootState) => state.createExp.form)
   const images = getFiles()
@@ -62,7 +62,6 @@ export default function Confirm({
       categoryId: Number(data.category.id),
       faqs: data.faqs,
       isSeries: false,
-      creatorUserId: "01JSVKNNAXDZNZ5NBDTSAZKWPM",
       sessions: [
         {
           time: time.convert(gregorian, gregorian_en).format(be_time_format),
@@ -79,6 +78,7 @@ export default function Confirm({
           directorsUserId: [data.sessions[0].director.userId],
           assistantsUserId: [] as string[],
           inclusionItemsId: data.sessions[0].inclusions.map((inc) => inc.id),
+          ...(isEdit ? { id: data.sessions[0].id } : {}),
         },
       ],
     }
@@ -87,7 +87,8 @@ export default function Confirm({
         await updateExp({ exp: body, expId }).unwrap()
         toast("تجربه بروز شد.")
       } else {
-        const result = await createExp(body).unwrap()
+        const newBody = { ...body, creatorUserId: "01JSVKNNAXDZNZ5NBDTSAZKWPM" }
+        const result = await createExp(newBody).unwrap()
         toast("تجربه ساخته شد.")
         const formData = new FormData()
         images.forEach((img) => formData.append("files", img))

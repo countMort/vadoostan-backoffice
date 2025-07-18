@@ -71,3 +71,13 @@ export interface AutocompleteProps<
 export type SelectProps = MUISelectProps & {
   name: string
 }
+
+export interface FileInputPreviewProps {
+  images: {
+    url: string
+    alt: string
+  }[]
+  onRemove?: (index: number) => void
+  disabled?: boolean
+  className?: string
+}
