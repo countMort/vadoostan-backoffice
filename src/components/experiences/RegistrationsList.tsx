@@ -1,4 +1,4 @@
-import { RegistrationsListProps } from "@/types/components/experiences"
+import { RegistrationsListProps } from "@/types/components/experiencess"
 import { toast } from "react-toastify"
 
 export const RegistrationsList = ({
