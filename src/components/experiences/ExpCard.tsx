@@ -1,4 +1,4 @@
-import { ExperienceCardProps } from "@/types/components/experiencess";
+import { ExperienceCardProps } from "@/types/components/experiences";
 import ExpChip from "./ExpChip";
 import { toPersianDigits } from "@/utils/locale";
 import OrangeDot from "../Global/Icons/OrangeDot";
