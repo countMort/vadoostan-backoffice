@@ -20,7 +20,11 @@ import {
 } from "@/api"
 import { toast } from "react-toastify"
 import { RootState } from "@/store"
-import { experience_create_route } from "@/constants/route-names"
+import {
+  createExpId,
+  experience_create_route,
+  experiences_route,
+} from "@/constants/route-names"
 import { getFiles, resetFiles } from "../utils"
 import { use } from "react"
 
@@ -38,7 +42,7 @@ export default function Confirm({
   params: Promise<{ id: string }>
 }) {
   const { id: expId } = use(params)
-  const isEdit = expId !== "create"
+  const isEdit = expId !== createExpId
 
   const data = useSelector((state: RootState) => state.createExp.form)
   const images = getFiles()
@@ -114,7 +118,8 @@ export default function Confirm({
   const cancel = () => {
     dispatch(resetForm())
     resetFiles()
-    back()
+    if (isEdit) router.push(experiences_route)
+    else back()
   }
 
   if (!data.title) return redirect(experience_create_route)

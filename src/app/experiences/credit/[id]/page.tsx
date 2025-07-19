@@ -30,7 +30,10 @@ import { RootState } from "@/store"
 import { useDispatch, useSelector } from "react-redux"
 import { setFormValues } from "./create.slice"
 import Autocomplete from "@/components/Global/Form/Autocomplete"
-import { experience_credit_confirm_route } from "@/constants/route-names"
+import {
+  experience_create_confirm_route,
+  experience_edit_confirm_route,
+} from "@/constants/route-names"
 import FileInput from "@/components/Global/Form/FileInput"
 import { getFiles, setFiles, transformDataToForm } from "./utils"
 import { useRouter } from "next/navigation"
@@ -101,7 +104,11 @@ export default function ExperienceForm({
   const handleSubmit = useCallback(
     ({ images, ...data }: typeof formValues) => {
       dispatch(setFormValues({ ...data, images: [] }))
-      router.push(experience_credit_confirm_route(isEdit ? expId : "0"))
+      router.push(
+        isEdit
+          ? experience_edit_confirm_route(expId)
+          : experience_create_confirm_route
+      )
       setFiles(images)
     },
     [dispatch, expId, isEdit, router]
