@@ -30,6 +30,7 @@ export const create_exp_form_initial_values = {
       duration: 0,
       price: 0,
       capacity: 0,
+      publishNow: false,
       publishTime: {
         date: "",
         time: "",

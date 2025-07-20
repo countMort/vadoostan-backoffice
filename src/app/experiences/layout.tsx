@@ -24,7 +24,7 @@ function Layout({ children }: { children: ReactNode }) {
 
   return (
     <>
-      <div className="mx-auto max-w-3xl mt-5 md:border-1 border-gray-400 rounded-sm mb-16">
+      <div className="mx-auto max-w-3xl mt-5 rounded-sm mb-16">
         {children}
       </div>
       <footer className="fixed bottom-0 left-0 z-20 w-full h-16 bg-white border-t border-gray-200 shadow-sm dark:bg-gray-800 dark:border-gray-600">

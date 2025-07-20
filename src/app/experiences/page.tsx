@@ -18,7 +18,7 @@ export default function Experiences() {
     status,
   });
   return (
-    <div className="flex p-2 gap-y-2 flex-col max-w-94 mx-auto">
+    <div className="flex px-2 py-10 gap-y-2 flex-col max-w-94 mx-auto">
       {data?.map((exp, i) => (
         <ExpCard
           key={i}

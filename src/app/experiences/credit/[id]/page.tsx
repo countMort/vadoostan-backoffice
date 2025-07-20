@@ -1,6 +1,5 @@
 "use client"
 import {
-  // useAddExperiencePhotosMutation,
   useGetExperienceCreationDataQuery,
   useGetExperienceQuery,
   useGetExperienceRegistrationsQuery,
@@ -11,7 +10,7 @@ import { NumberInput } from "@/components/Global/Form/NumberInput"
 import TrashIcon from "@/components/Global/Icons/TrashIcon"
 import { baseUrl, create_exp_form_validation_schema } from "@/constants"
 import { FieldArray, FormikProps } from "formik"
-import { use, useCallback, useEffect, useRef } from "react"
+import { use, useCallback, useEffect, useMemo, useRef } from "react"
 import { DateObject } from "react-multi-date-picker"
 import persian from "react-date-object/calendars/persian"
 import persian_fa from "react-date-object/locales/persian_fa"
@@ -39,7 +38,7 @@ import { getFiles, setFiles, transformDataToForm } from "./utils"
 import { useRouter } from "next/navigation"
 import { FileInputPreview } from "@/components/Global/Form/Partials/FileInputPreview"
 import { RegistrationsList } from "@/components/experiences/RegistrationsList"
-
+import Checkbox from "@/components/Global/Form/Checkbox"
 export default function ExperienceForm({
   params,
 }: {
@@ -67,23 +66,6 @@ export default function ExperienceForm({
         skip: !isEdit,
       }
     )
-  // const [upload] = useAddExperiencePhotosMutation()
-
-  // const uploadImages = async () => {
-  //   const formData = new FormData()
-  //   formikRef.current?.values.images.forEach((img) => {
-  //     formData.append("files", img)
-  //   })
-  //   const result = await upload({
-  //     expId: "01K0AJ1E0KBC1MS9AK0JG9QNHS",
-  //     formData,
-  //   })
-  //     .unwrap()
-  //     .catch((err) => {
-  //       console.log(err)
-  //     })
-  //   console.log(result)
-  // }
 
   const previousData = useSelector((state: RootState) => state.createExp.form)
 
@@ -95,10 +77,13 @@ export default function ExperienceForm({
     }
   }, [creationData, edittingData])
 
-  const formValues = {
-    ...previousData,
-    images: getFiles(),
-  }
+  const formValues = useMemo(
+    () => ({
+      ...previousData,
+      images: getFiles(),
+    }),
+    [previousData]
+  )
   const dispatch = useDispatch()
 
   const handleSubmit = useCallback(
@@ -300,6 +285,11 @@ export default function ExperienceForm({
                     disabled
                     className="col-span-12 sm:col-span-6"
                   />
+                  <Checkbox
+                    name={`sessions[${index}].publishNow`}
+                    label="همین حالا منتشر شود."
+                    classNames={{ wrapper: "col-span-12" }}
+                  />
                   {creationData?.result && (
                     <TextField
                       name={`sessions[${index}].director.userId`}
@@ -447,7 +437,6 @@ export default function ExperienceForm({
           <Button
             onClick={() => {
               formikRef.current?.submitForm()
-              // uploadImages()
             }}
           >
             ثبت

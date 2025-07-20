@@ -40,11 +40,14 @@ export const transformDataToForm = (
         director: data.directors.find(
           (director) => director.name === session.directors[0].name
         )!,
-        venue: {...data.venues.find((venue) => venue.title === session.venueName)!},
+        venue: {
+          ...data.venues.find((venue) => venue.title === session.venueName)!,
+        },
         publishTime: {
           date: publishTime.format("YYYY/MM/DD"),
           time: publishTime.format("HH:mm"),
         },
+        publishNow: false,
       }
     }),
   }
