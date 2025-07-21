@@ -5,7 +5,7 @@ import Slider, { Settings } from "react-slick"
 import { Button, Divider, Typography } from "@mui/material"
 import "slick-carousel/slick/slick.css"
 import "slick-carousel/slick/slick-theme.css"
-import { baseUrl, be_time_format } from "@/constants"
+import { be_time_format } from "@/constants"
 import FestIcon from "@/components/Global/Icons/FestIcon"
 import Image from "next/image"
 import { customDate } from "@/components/Global/Form/DatePicker"
@@ -82,6 +82,7 @@ export default function Confirm({
           directorsUserId: [data.sessions[0].director.userId],
           assistantsUserId: [] as string[],
           inclusionItemsId: data.sessions[0].inclusions.map((inc) => inc.id),
+          publishNow: data.sessions[0].publishNow,
           ...(isEdit ? { id: data.sessions[0].id } : {}),
         },
       ],
@@ -194,7 +195,7 @@ export default function Confirm({
           {data.sessions[0].director.photoUrl && (
             <Image
               className="object-cover rounded-full w-[55px] h-[55px]"
-              src={baseUrl + data.sessions[0].director.photoUrl}
+              src={"/" + data.sessions[0].director.photoUrl}
               alt=""
               width={55}
               height={55}
