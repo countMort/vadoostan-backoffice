@@ -22,10 +22,10 @@ const nextConfig: NextConfig = {
         source: "/api/:path*", // Your local proxy endpoint
         destination: `${baseUrl}/api/:path*`, // Target URL
       },
-      {
-        source: "/public/:path",
-        destination: `${baseUrl}/public/:path*`,
-      },
+      // {
+      //   source: "/public/:path",
+      //   destination: `${baseUrl}/public/:path*`,
+      // },
     ]
   },
 }
