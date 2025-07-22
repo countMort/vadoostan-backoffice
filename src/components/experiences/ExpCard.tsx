@@ -1,10 +1,10 @@
-import { ExperienceCardProps } from "@/types/components/experiences";
-import ExpChip from "./ExpChip";
-import { toPersianDigits } from "@/utils/locale";
-import OrangeDot from "../Global/Icons/OrangeDot";
-import { ExperienceStatus } from "@/types/api";
-import { ComponentProps } from "react";
-import { catDic } from "@/constants";
+import { ExperienceCardProps } from "@/types/components/experiences"
+import ExpChip from "./ExpChip"
+import { toPersianDigits } from "@/utils/locale"
+import OrangeDot from "../Global/Icons/OrangeDot"
+import { ExperienceStatus } from "@/types/api"
+import { ComponentProps } from "react"
+import { catDic } from "@/constants"
 
 const statusDic: Record<
   ExperienceStatus,
@@ -26,7 +26,7 @@ const statusDic: Record<
     label: "انتظار تایید",
     color: "orange",
   },
-};
+}
 
 export default function ExpCard({
   title = "جواهر سازی، ساخت گردنبند",
@@ -47,8 +47,8 @@ export default function ExpCard({
       <div className="text-14">{title}</div>
       <div className="flex gap-x-2">
         <ExpChip>{catDic[category as keyof typeof catDic] || category}</ExpChip>
-        <ExpChip variant={statusDic[status].color}>
-          {statusDic[status].label}
+        <ExpChip variant={statusDic[status]?.color}>
+          {statusDic[status]?.label || status}
         </ExpChip>
         <ExpChip
           variant={
@@ -70,7 +70,7 @@ export default function ExpCard({
         تاریخ: {date}
       </div>
     </div>
-  );
+  )
 }
 
 // Client Exp Card
