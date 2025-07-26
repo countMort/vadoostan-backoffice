@@ -13,4 +13,5 @@
   --color-code-03: #fae4d7;
   --color-code-04: #a1c8f6;
   --color-code-05: #ffcccc;
+  --color-divider: var(--mui-palette-divider)
 }

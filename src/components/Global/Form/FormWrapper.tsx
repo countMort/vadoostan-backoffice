@@ -13,7 +13,7 @@ const FormWrapper = <T extends FormikValues>({
 }: FormProps<T>) => {
   return (
     <div
-      className={`p-5 %${classNames?.wrapper} ${
+      className={`px-5 ${classNames?.wrapper ?? ""} ${
         loading
           ? "relative items-center block bg-white dark:bg-gray-800 dark:border-gray-800 dark:hover:bg-gray-700 opacity-80"
           : ""

@@ -1,24 +1,50 @@
-"use client";
+"use client"
 
-import { useGetExperiencesQuery } from "@/api";
-import ExpCard from "@/components/experiences/ExpCard";
-import {
-  experience_edit_route,
-  ExperiencePageStatus,
-} from "@/constants/route-names";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useGetExperiencesQuery } from "@/api"
+import ExpCard from "@/components/experiences/ExpCard"
+import { experience_edit_route } from "@/constants/route-names"
+import { RootState } from "@/store"
+import { ToggleButton, ToggleButtonGroup } from "@mui/material"
+import { useRouter } from "next/navigation"
+import { useDispatch, useSelector } from "react-redux"
+import { setStatus } from "./experiences.slice"
+import { ExperiencesListStatus } from "@/types/api"
 
 export default function Experiences() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const status =
-    (searchParams.get("status") as ExperiencePageStatus) ||
-    ExperiencePageStatus.ACTIVE;
+  const router = useRouter()
+  const dispatch = useDispatch()
+  const { status } = useSelector((state: RootState) => state.experiences.base)
   const { data } = useGetExperiencesQuery({
     status,
-  });
+  })
+  const onStatusClick = (
+    event: React.MouseEvent<HTMLElement>,
+    value: ExperiencesListStatus
+  ) => {
+    dispatch(setStatus(value))
+  }
   return (
-    <div className="flex px-2 py-10 gap-y-2 flex-col max-w-94 mx-auto">
+    <div className="flex px-2 gap-y-2 flex-col max-w-94 mx-auto">
+      <ToggleButtonGroup value={status}>
+        <ToggleButton
+          value={ExperiencesListStatus.ACTIVE}
+          onChange={onStatusClick}
+          color="primary"
+          fullWidth
+          className="!rounded-r-10"
+        >
+          فعال
+        </ToggleButton>
+        <ToggleButton
+          value={ExperiencesListStatus.INACTIVE}
+          onChange={onStatusClick}
+          color="primary"
+          fullWidth
+          className="!rounded-l-10"
+        >
+          غیر فعال
+        </ToggleButton>
+      </ToggleButtonGroup>
       {data?.map((exp, i) => (
         <ExpCard
           key={i}
@@ -34,5 +60,5 @@ export default function Experiences() {
         />
       ))}
     </div>
-  );
+  )
 }

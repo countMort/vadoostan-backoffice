@@ -67,7 +67,9 @@ export default function ExperienceForm({
       }
     )
 
-  const previousData = useSelector((state: RootState) => state.createExp.form)
+  const previousData = useSelector(
+    (state: RootState) => state.experiences.credit.form
+  )
 
   useEffect(() => {
     if (edittingData && creationData) {

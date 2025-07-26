@@ -1,5 +1,3 @@
-import { ExperiencePageStatus } from "@/constants/route-names"
-
 export type Response<T> = {
   isSuccessful: boolean
   message: string
@@ -60,7 +58,7 @@ export interface CreateExperienceResponse {
 }
 
 export interface GetExperiencesArgs {
-  status: ExperiencePageStatus
+  status: ExperiencesListStatus
 }
 
 export enum ExperienceStatus {
@@ -68,6 +66,12 @@ export enum ExperienceStatus {
   INACTIVE = "inactive",
   READY_TO_PUBLISH = "ready_to_publish",
   CANCELLED = "cancelled",
+  RUNNING = "running",
+}
+
+export enum ExperiencesListStatus {
+  INACTIVE = "inactive",
+  ACTIVE = "active",
 }
 
 export interface AddExperiencePhotosArgs {

@@ -44,7 +44,7 @@ export default function Confirm({
   const { id: expId } = use(params)
   const isEdit = expId !== createExpId
 
-  const data = useSelector((state: RootState) => state.createExp.form)
+  const data = useSelector((state: RootState) => state.experiences.credit.form)
   const images = getFiles()
   const router = useRouter()
   const time = customDate(data.sessions[0].time, {

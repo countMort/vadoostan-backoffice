@@ -26,6 +26,10 @@ const statusDic: Record<
     label: "انتظار تایید",
     color: "orange",
   },
+  [ExperienceStatus.RUNNING]: {
+    label: "در حال اجرا",
+    color: "blue",
+  },
 }
 
 export default function ExpCard({
@@ -41,7 +45,7 @@ export default function ExpCard({
 }: ExperienceCardProps) {
   return (
     <div
-      className="px-6 py-1 space-y-2 border-gray-300 dark:border-gray-600 rounded-10 border md:border-0 md:shadow-xs md:dark:shadow-white w-full cursor-pointer"
+      className="px-6 py-1 space-y-2 rounded-10 border border-divider md:dark:shadow-white w-full cursor-pointer"
       onClick={onClick}
     >
       <div className="text-14">{title}</div>
@@ -71,17 +75,4 @@ export default function ExpCard({
       </div>
     </div>
   )
-}
-
-// Client Exp Card
-{
-  /* <div className="flex flex-row bg-white border border-gray-200 rounded-10 shadow-sm dark:border-gray-700 dark:bg-gray-800 p-2.5 h-20">
-      <div className="h-full flex items-center shrink-0 justify-center self-center bg-gray-400 aspect-square rounded-10">
-        <Typography fontSize={14} fontWeight="bolder">{category}</Typography>
-      </div>
-      <div className="flex flex-col justify-between leading-normal mr-3.5">
-        <Typography fontSize={14}>{title}</Typography>
-        <Typography fontSize={12}>{description}</Typography>
-      </div>
-    </div> */
 }
