@@ -1,8 +1,8 @@
 import { Attendee, ExperienceStatus } from "../api"
 
 export interface ExperienceCardProps {
-  title?: string
-  category?: string
+  title: string
+  category: string
   neighbourhood: string
   time: string
   date: string

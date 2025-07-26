@@ -33,11 +33,11 @@ const statusDic: Record<
 }
 
 export default function ExpCard({
-  title = "جواهر سازی، ساخت گردنبند",
-  category = "خلق",
-  neighbourhood = "توحید",
-  time = "15:00",
-  date = "May 15",
+  title,
+  category,
+  neighbourhood,
+  time,
+  date,
   registrations,
   capacity,
   onClick,
