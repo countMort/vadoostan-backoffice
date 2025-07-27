@@ -1,35 +1,32 @@
-"use client";
+"use client"
 
-import { experience_create_route } from "@/constants/route-names";
-import { Button, Typography } from "@mui/material";
-import Link from "next/link";
-import { useEffect, useState } from "react";
+import { experience_create_route } from "@/constants/route-names"
+import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
 
 declare global {
   interface Window {
-    Telegram: any;
+    Telegram: any
   }
 }
 
 export default function Home() {
-  const [user, setUser] = useState<any>(null);
+  const [, setUser] = useState<any>(null)
+  const router = useRouter()
 
   useEffect(() => {
-    const tg = window.Telegram?.WebApp;
+    const tg = window.Telegram?.WebApp
     if (tg) {
-      tg.ready();
+      tg.ready()
 
-      tg.expand();
-      setUser(tg.initDataUnsafe.user);
+      tg.expand()
+      setUser(tg.initDataUnsafe.user)
     }
-  }, []);
+
+    router.replace(experience_create_route)
+  }, [router])
 
   return (
-    <div className="p-4 text-center h-[100vh] flex items-center justify-center flex-col">
-      <Typography fontSize={14}>سلام {user?.first_name} 👋</Typography>
-      <Button component={Link} href={experience_create_route}>
-        ساخت تجربه جدید
-      </Button>
-    </div>
-  );
+    <div className="p-4 text-center h-[100vh] flex items-center justify-center flex-col"></div>
+  )
 }

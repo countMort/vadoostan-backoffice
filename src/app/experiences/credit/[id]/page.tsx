@@ -182,9 +182,9 @@ export default function ExperienceForm({
           <FieldArray name="faqs">
             {({ push, remove }) => (
               <div className="col-span-12">
-                <h3>پرسش های پر تکرار (FAQ)</h3>
+                <h3 className="mb-2">پرسش های پر تکرار (FAQ)</h3>
                 {values.faqs.map((_: any, index: number) => (
-                  <div key={index} className="p-4 border rounded-md">
+                  <div key={index} className="p-4 border border-divider rounded-md">
                     <div className="mb-2">
                       <TextField
                         name={`faqs[${index}].question`}
