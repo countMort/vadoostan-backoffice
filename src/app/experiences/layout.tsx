@@ -3,6 +3,7 @@
 import { Button, ButtonGroup } from "@mui/material"
 import { ReactNode } from "react"
 import {
+  experience_actions_route,
   experience_create_route,
   experiences_route,
 } from "@/constants/route-names"
@@ -12,6 +13,7 @@ import { usePathname } from "next/navigation"
 const buttons = [
   { label: "خلق تجربه", path: experience_create_route },
   { label: "تجربه‌ها", path: experiences_route },
+  { label: "عملیات", path: experience_actions_route },
 ]
 
 function Layout({ children }: { children: ReactNode }) {
