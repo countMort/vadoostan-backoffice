@@ -8,7 +8,11 @@ import DatePicker from "@/components/Global/Form/DatePicker"
 import Form from "@/components/Global/Form/FormWrapper"
 import { NumberInput } from "@/components/Global/Form/NumberInput"
 import TrashIcon from "@/components/Global/Icons/TrashIcon"
-import { baseUrl, create_exp_form_validation_schema } from "@/constants"
+import {
+  baseUrl,
+  create_exp_form_validation_schema,
+  defaultCity,
+} from "@/constants"
 import { FieldArray, FormikProps } from "formik"
 import { use, useCallback, useEffect, useMemo, useRef } from "react"
 import { DateObject } from "react-multi-date-picker"
@@ -184,7 +188,10 @@ export default function ExperienceForm({
               <div className="col-span-12">
                 <h3 className="mb-2">پرسش های پر تکرار (FAQ)</h3>
                 {values.faqs.map((_: any, index: number) => (
-                  <div key={index} className="p-4 border border-divider rounded-md">
+                  <div
+                    key={index}
+                    className="p-4 border border-divider rounded-md"
+                  >
                     <div className="mb-2">
                       <TextField
                         name={`faqs[${index}].question`}
@@ -292,6 +299,31 @@ export default function ExperienceForm({
                     label="همین حالا منتشر شود."
                     classNames={{ wrapper: "col-span-12" }}
                   />
+                  <TextField
+                    name="city.id"
+                    label="شهر"
+                    select
+                    className="col-span-12 sm:col-span-6"
+                    onChange={(val) => {
+                      setFieldValue("city.id", Number(val.target.value))
+                      setFieldValue(
+                        "city.title",
+                        creationData?.result.cities.find(
+                          (city) => city.id === Number(val.target.value)
+                        )?.title || ""
+                      )
+                    }}
+                  >
+                    {creationData ? (
+                      creationData.result.cities.map((city) => (
+                        <MenuItem key={`city-${city.title}`} value={city.id}>
+                          {city.title}
+                        </MenuItem>
+                      ))
+                    ) : (
+                      <MenuItem value={defaultCity.id} />
+                    )}
+                  </TextField>
                   {creationData?.result && (
                     <TextField
                       name={`sessions[${index}].director.userId`}

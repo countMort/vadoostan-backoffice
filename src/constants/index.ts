@@ -8,6 +8,11 @@ export const catDic = {
   movie: "فیلم",
 }
 
+export const defaultCity = {
+  title: "تهران",
+  id: 1,
+}
+
 export const create_exp_form_initial_values = {
   title: "",
   description: "",
@@ -22,6 +27,7 @@ export const create_exp_form_initial_values = {
     id: number | ""
     title: string
   },
+  city: defaultCity,
   sessions: [
     {
       id: "",
@@ -66,6 +72,9 @@ export const create_exp_form_validation_schema = Yup.object({
     .required("توضیحات الزامی است."),
   category: Yup.object({
     id: Yup.number().required("دسته بندی قبیله مورد نیاز است."),
+  }),
+  city: Yup.object({
+    id: Yup.number().required("شهر مورد نیاز است."),
   }),
   faqs: Yup.array()
     .of(

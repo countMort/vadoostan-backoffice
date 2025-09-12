@@ -66,6 +66,7 @@ export default function Confirm({
       categoryId: Number(data.category.id),
       faqs: data.faqs,
       isSeries: false,
+      cityId: data.city.id,
       sessions: [
         {
           time: time.convert(gregorian, gregorian_en).format(be_time_format),
@@ -149,6 +150,8 @@ export default function Confirm({
           <Typography fontSize={14}>
             {time.format("DD MMMM، ساعت HH:mm")}
           </Typography>
+          <div className="rounded-full w-2.5 h-2.5 bg-amber-700 self-center mx-3.5" />
+          <Typography>شهر {data.city.title}</Typography>
           <div className="rounded-full w-2.5 h-2.5 bg-amber-700 self-center mx-3.5" />
           <Typography>محله {data.sessions[0].venue.title}</Typography>
         </div>

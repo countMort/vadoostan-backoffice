@@ -8,6 +8,7 @@ export type Response<T> = {
 export interface ExperienceCreationData {
   assistants: { userId: string; name: string }[]
   categories: { id: number; title: string }[]
+  cities: { id: number; title: string }[]
   directors: [
     {
       bio: string
@@ -36,6 +37,7 @@ export interface CreateExperienceBody {
   }[]
   isSeries: boolean
   creatorUserId: string
+  cityId: number
   sessions: {
     time: string
     publishTime: string
@@ -122,6 +124,7 @@ export interface BEExperience {
     assistants: []
     inclusions: []
   }[]
+  cityId: number
   title: string
   category: string
   description: string

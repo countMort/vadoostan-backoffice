@@ -2,7 +2,7 @@ import {
   customDate,
   dateToPersianDate,
 } from "@/components/Global/Form/DatePicker"
-import { create_exp_form_initial_values } from "@/constants"
+import { create_exp_form_initial_values, defaultCity } from "@/constants"
 import { BEExperience, ExperienceCreationData } from "@/types/api"
 let files: File[] = []
 
@@ -24,6 +24,7 @@ export const transformDataToForm = (
 ): typeof create_exp_form_initial_values => {
   return {
     ...exp,
+    city: data.cities.find((city) => city.id === exp.cityId) || defaultCity,
     images: [] as File[],
     category: {
       ...data.categories.find((cat) => cat.title === exp.category)!,
