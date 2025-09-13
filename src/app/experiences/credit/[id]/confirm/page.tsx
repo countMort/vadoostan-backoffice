@@ -6,7 +6,6 @@ import { Button, Divider, Typography } from "@mui/material"
 import "slick-carousel/slick/slick.css"
 import "slick-carousel/slick/slick-theme.css"
 import { baseUrl, be_time_format } from "@/constants"
-import FestIcon from "@/components/Global/Icons/FestIcon"
 import Image from "next/image"
 import { customDate } from "@/components/Global/Form/DatePicker"
 import { resetForm } from "../create.slice"
@@ -69,9 +68,13 @@ export default function Confirm({
       cityId: data.city.id,
       sessions: [
         {
-          time: time.convert(gregorian, gregorian_en).format(be_time_format),
+          time: time
+            .convert(gregorian, gregorian_en)
+            .toUTC()
+            .format(be_time_format),
           publishTime: publishTime
             .convert(gregorian, gregorian_en)
+            .toUTC()
             .format(be_time_format),
           description: data.sessions[0].description,
           duration: Number(data.sessions[0].duration),
@@ -82,7 +85,6 @@ export default function Confirm({
           allowedGender: "all",
           directorsUserId: [data.sessions[0].director.userId],
           assistantsUserId: [] as string[],
-          inclusionItemsId: data.sessions[0].inclusions.map((inc) => inc.id),
           publishNow: data.sessions[0].publishNow,
           ...(isEdit ? { id: data.sessions[0].id } : {}),
         },
@@ -161,23 +163,6 @@ export default function Confirm({
         </Typography>
         <Typography fontSize={12}>{data.description}</Typography>
         <Divider sx={{ mt: "25px", mb: "15px" }} />
-        {Boolean(data.sessions[0].inclusions?.length) && (
-          <>
-            <Typography component="h2">آنچه در تجربه ارائه می‌شود</Typography>
-            <div className="flex flex-wrap justify-around mt-2.5">
-              {data.sessions[0].inclusions.map((inc) => (
-                <div
-                  className="w-20 h-20 bg-gray-400 rounded-lg flex justify-center items-center flex-col dark:bg-gray-800 text-center"
-                  key={`inc-${inc.id}`}
-                >
-                  <FestIcon className=" dark:fill-white mb-1.5" />
-                  <Typography fontSize={14}>{inc.title}</Typography>
-                </div>
-              ))}
-            </div>
-            <Divider sx={{ mt: "15px", mb: "15px" }} />
-          </>
-        )}
         <Typography component="h2" fontSize={16}>
           سوالات متداول
         </Typography>

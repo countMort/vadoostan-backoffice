@@ -17,7 +17,6 @@ export interface ExperienceCreationData {
       userId: string
     }
   ]
-  inclusions: { id: number; title: string }[]
   templates: []
   venues: {
     address: string
@@ -122,7 +121,6 @@ export interface BEExperience {
       name: string
     }[]
     assistants: []
-    inclusions: []
   }[]
   cityId: number
   title: string

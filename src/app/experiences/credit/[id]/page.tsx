@@ -27,12 +27,10 @@ import {
   CardMedia,
   MenuItem,
   Typography,
-  TextField as MUITextField,
 } from "@mui/material"
 import { RootState } from "@/store"
 import { useDispatch, useSelector } from "react-redux"
 import { setFormValues } from "./create.slice"
-import Autocomplete from "@/components/Global/Form/Autocomplete"
 import {
   experience_create_confirm_route,
   experience_edit_confirm_route,
@@ -261,7 +259,7 @@ export default function ExperienceForm({
                     label="توضیحات"
                     className="col-span-12 md:col-span-6"
                   /> */}
-                  <Autocomplete
+                  {/* <Autocomplete
                     name={`sessions[${index}].inclusions`}
                     className="col-span-12 md:col-span-6"
                     multiple
@@ -275,7 +273,7 @@ export default function ExperienceForm({
                         label="آنچه در این تجربه ارائه میشود"
                       />
                     )}
-                  />
+                  /> */}
                   <TextField
                     name={`sessions[${index}.groupLink]`}
                     label="لینک گروه تلگرامی"

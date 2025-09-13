@@ -53,10 +53,6 @@ export const create_exp_form_initial_values = {
         bio: "",
         photoUrl: "",
       },
-      inclusions: [] as {
-        id: number
-        title: string
-      }[],
     },
   ],
   images: [] as File[],
