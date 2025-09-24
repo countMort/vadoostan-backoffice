@@ -1,4 +1,4 @@
-import { create_exp_form_initial_values } from "@/constants";
+import { create_exp_form_initial_values } from "@/constants/experiences";
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 

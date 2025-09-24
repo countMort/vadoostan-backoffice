@@ -1,22 +1,7 @@
 import { RootState } from "@/store"
-import {
-  AddExperiencePhotosArgs,
-  BEExperience,
-  CreateExperienceBody,
-  CreateExperienceResponse,
-  GetExperienceArgs,
-  GetExperiencesArgs,
-  GetExperiencesResponse,
-  Response,
-  ExperienceCreationData,
-  UpdateExperienceArgs,
-  GetExperienceRegistrationsArgs,
-  GetExperienceRegistrationsResponse,
-} from "@/types/api"
 import type { Action, PayloadAction } from "@reduxjs/toolkit"
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 import { HYDRATE } from "next-redux-wrapper"
-import { experienceListTranformer } from "./transformers/experiences"
 import { api_tags } from "@/constants/api-tags"
 function isHydrateAction(action: Action): action is PayloadAction<RootState> {
   return action.type === HYDRATE
@@ -42,76 +27,10 @@ export const mainApi = createApi({
       return action.payload[reducerPath]
     }
   },
-  endpoints: (build) => ({
-    getExperienceCreationData: build.query<
-      Response<ExperienceCreationData>,
-      void
-    >({
-      query: () => `admin/experiences/creation/data`,
-    }),
-    createExperience: build.mutation<
-      Response<CreateExperienceResponse>,
-      CreateExperienceBody
-    >({
-      query: (body) => ({
-        url: "admin/experiences",
-        method: "POST",
-        body,
-      }),
-      invalidatesTags: [api_tags.experiences],
-    }),
-    getExperiences: build.query({
-      query: ({ status }: GetExperiencesArgs) => ({
-        url: "/admin/experiences",
-        params: { status },
-      }),
-      transformResponse: (
-        baseQueryReturnValue: Response<GetExperiencesResponse>
-      ) => {
-        return experienceListTranformer(baseQueryReturnValue.result.exps)
-      },
-      providesTags: [api_tags.experiences],
-      // providesTags(result, error, arg, meta) {
-
-      // },
-    }),
-    addExperiencePhotos: build.mutation<any, AddExperiencePhotosArgs>({
-      query: ({ expId, formData }) => ({
-        url: `/admin/experiences/${expId}/photos`,
-        body: formData,
-        method: "POST",
-      }),
-    }),
-    getExperience: build.query<Response<BEExperience>, GetExperienceArgs>({
-      query: ({ expId }) => ({
-        url: `/admin/experiences/${expId}`,
-      }),
-    }),
-    updateExperience: build.mutation<Response<any>, UpdateExperienceArgs>({
-      query: ({ expId, exp }) => ({
-        url: `/admin/experiences/${expId}`,
-        body: exp,
-        method: "PATCH",
-      }),
-      invalidatesTags: [api_tags.experiences],
-    }),
-    getExperienceRegistrations: build.query<
-      Response<GetExperienceRegistrationsResponse>,
-      GetExperienceRegistrationsArgs
-    >({
-      query: ({ expId }) => ({
-        url: `/admin/experiences/${expId}/registrations`,
-      }),
-    }),
+  endpoints: () => ({
+    // Experience-related endpoints have been moved to src/api/experiences/index.ts
   }),
 })
 
-export const {
-  useGetExperienceCreationDataQuery,
-  useCreateExperienceMutation,
-  useGetExperiencesQuery,
-  useAddExperiencePhotosMutation,
-  useGetExperienceQuery,
-  useUpdateExperienceMutation,
-  useGetExperienceRegistrationsQuery,
-} = mainApi
+// Experience-related hooks have been moved to src/api/experiences/index.ts
+// Import them from there instead

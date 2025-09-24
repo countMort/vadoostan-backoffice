@@ -5,7 +5,8 @@ import Slider, { Settings } from "react-slick"
 import { Button, Divider, Typography } from "@mui/material"
 import "slick-carousel/slick/slick.css"
 import "slick-carousel/slick/slick-theme.css"
-import { baseUrl, be_time_format } from "@/constants"
+import { be_time_format } from "@/constants/experiences"
+import { baseUrl } from "@/constants"
 import Image from "next/image"
 import { customDate } from "@/components/Global/Form/DatePicker"
 import { resetForm } from "../create.slice"
@@ -16,7 +17,7 @@ import {
   useAddExperiencePhotosMutation,
   useCreateExperienceMutation,
   useUpdateExperienceMutation,
-} from "@/api"
+} from "@/api/experiences"
 import { toast } from "react-toastify"
 import { RootState } from "@/store"
 import {

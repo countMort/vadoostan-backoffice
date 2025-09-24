@@ -1,6 +1,6 @@
 "use client"
 
-import { useGetExperiencesQuery } from "@/api"
+import { useGetExperiencesQuery } from "@/api/experiences"
 import ExpCard from "@/components/experiences/ExpCard"
 import { experience_edit_route } from "@/constants/route-names"
 import { RootState } from "@/store"

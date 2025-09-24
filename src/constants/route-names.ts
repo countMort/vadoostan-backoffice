@@ -7,3 +7,8 @@ export const experience_edit_confirm_route = (id: string) =>
 export const experience_create_confirm_route =
   experience_edit_confirm_route(createExpId)
 export const experience_actions_route = "/experiences/actions"
+export const create_venue_id = "create"
+export const experience_actions_edit_venue_route = (id: string) =>
+  `/experiences/actions/venues/credit/${id}`
+export const experience_actions_create_venue_route =
+  experience_actions_edit_venue_route(create_venue_id)

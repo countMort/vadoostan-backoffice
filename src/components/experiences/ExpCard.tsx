@@ -4,7 +4,7 @@ import { toPersianDigits } from "@/utils/locale"
 import OrangeDot from "../Global/Icons/OrangeDot"
 import { ExperienceStatus } from "@/types/api"
 import { ComponentProps } from "react"
-import { catDic } from "@/constants"
+import { catDic } from "@/constants/experiences"
 
 const statusDic: Record<
   ExperienceStatus,
@@ -50,7 +50,9 @@ export default function ExpCard({
     >
       <div className="text-14">{title}</div>
       <div className="flex gap-x-2">
-        <ExpChip>{catDic[category as keyof typeof catDic] || category}</ExpChip>
+        <ExpChip>
+          {catDic[category as keyof typeof catDic]?.label || category}
+        </ExpChip>
         <ExpChip variant={statusDic[status]?.color}>
           {statusDic[status]?.label || status}
         </ExpChip>

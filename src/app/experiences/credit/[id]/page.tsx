@@ -3,16 +3,15 @@ import {
   useGetExperienceCreationDataQuery,
   useGetExperienceQuery,
   useGetExperienceRegistrationsQuery,
-} from "@/api"
+} from "@/api/experiences"
 import DatePicker from "@/components/Global/Form/DatePicker"
 import Form from "@/components/Global/Form/FormWrapper"
 import { NumberInput } from "@/components/Global/Form/NumberInput"
 import TrashIcon from "@/components/Global/Icons/TrashIcon"
 import {
-  baseUrl,
   create_exp_form_validation_schema,
   defaultCity,
-} from "@/constants"
+} from "@/constants/experiences"
 import { FieldArray, FormikProps } from "formik"
 import { use, useCallback, useEffect, useMemo, useRef } from "react"
 import { DateObject } from "react-multi-date-picker"
@@ -41,6 +40,7 @@ import { useRouter } from "next/navigation"
 import { FileInputPreview } from "@/components/Global/Form/Partials/FileInputPreview"
 import { RegistrationsList } from "@/components/experiences/RegistrationsList"
 import Checkbox from "@/components/Global/Form/Checkbox"
+import { baseUrl } from "@/constants"
 export default function ExperienceForm({
   params,
 }: {

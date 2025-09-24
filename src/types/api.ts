@@ -134,6 +134,30 @@ export interface UpdateExperienceArgs {
   exp: UpdateExperienceBody
 }
 
+// Venue-related types
+export interface CreateVenueBody {
+  title: string
+  fullAddress: string
+  location: {
+    latitude: number
+    longitude: number
+  }
+  cityId: number
+  neighborhood: string
+}
+
+export interface CreateVenueResponse {
+  id: number
+  title: string
+  fullAddress: string
+  location: {
+    latitude: number
+    longitude: number
+  }
+  cityId: number
+  neighborhood: string
+}
+
 export interface GetExperienceRegistrationsArgs {
   expId: string
 }
