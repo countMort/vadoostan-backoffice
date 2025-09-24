@@ -14,6 +14,7 @@ import { FormikProps } from "formik"
 import { useGetExperienceCreationDataQuery } from "@/api/experiences"
 import { useCreateVenueMutation } from "@/api/experiences/venues"
 import { toast } from "react-toastify"
+import { experience_actions_route } from "@/constants/route-names"
 
 export default function VenueCredit({
   params,
@@ -44,7 +45,7 @@ export default function VenueCredit({
         }
         await createVenue(body).unwrap()
         toast("مکان با موفقیت ثبت شد.")
-        router.push("/experiences")
+        router.push(experience_actions_route)
       } catch (error) {
         console.error("Error creating venue:", error)
       }

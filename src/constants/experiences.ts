@@ -193,3 +193,35 @@ export const create_venue_form_validation_schema = Yup.object({
     .url("لینک گوگل مپ معتبر نیست.")
     .required("لینک گوگل مپ الزامی است."),
 })
+
+// Director form constants
+export const create_director_form_initial_values = {
+  firstName: "",
+  lastName: "",
+  mobileNumber: "",
+  jobTitle: "",
+  bio: "",
+  image: [] as File[],
+}
+
+export const create_director_form_validation_schema = Yup.object({
+  firstName: Yup.string().required("نام الزامی است."),
+  lastName: Yup.string().required("نام خانوادگی الزامی است."),
+  mobileNumber: Yup.string()
+    .matches(/^09\d{9}$/, "شماره موبایل معتبر نیست (مثال: 09123456789)")
+    .required("شماره موبایل الزامی است."),
+  jobTitle: Yup.string().required("عنوان شغلی الزامی است."),
+  bio: Yup.string()
+    .min(10, "حداقل 10 کارکتر")
+    .max(500, "تعداد کارکتر از 500 بیشتر نمی‌تواند باشد.")
+    .required("بیوگرافی الزامی است."),
+  image: Yup.array()
+    .of(
+      Yup.mixed().test(
+        "fileSize",
+        "حجم فایل بالاست (max 1 MB)",
+        (file) => !file || (file as File).size <= 1 * 1024 * 1024 // 1 MB
+      )
+    )
+    .min(1, "عکس مورد نیاز است."),
+})

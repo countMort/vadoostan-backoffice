@@ -172,3 +172,37 @@ export interface GetExperienceRegistrationsResponse {
   remainingCapacity: number
   attendees: Attendee[]
 }
+
+// Director-related types
+export interface CreateDirectorBody {
+  firstName: string
+  lastName: string
+  mobileNumber: string
+  jobTitle: string
+  bio: string
+  photo: string // base64 encoded string
+}
+
+export interface CreateDirectorResponse {
+  userId: string
+  firstName: string
+  lastName: string
+  mobileNumber: string
+  jobTitle: string
+  bio: string
+  photo: string
+}
+
+export interface UpdateDirectorBody {
+  firstName: string
+  lastName: string
+  mobileNumber: string
+  jobTitle: string
+  bio: string
+  photo: string // base64 encoded string
+}
+
+export interface UpdateDirectorArgs {
+  directorId: string
+  director: UpdateDirectorBody
+}

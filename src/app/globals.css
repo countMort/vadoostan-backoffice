@@ -59,3 +59,7 @@ input[type="number"] {
     }
   }
 }
+
+.MuiFormHelperText-root {
+  direction: rtl;
+}
