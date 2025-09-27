@@ -17,3 +17,9 @@ export const experience_actions_edit_director_route = (id: string) =>
   `/experiences/actions/directors/credit/${id}`
 export const experience_actions_create_director_route =
   experience_actions_edit_director_route(create_director_id)
+
+export const create_category_id = "create"
+export const experience_actions_edit_category_route = (id: string) =>
+  `/experiences/actions/categories/credit/${id}`
+export const experience_actions_create_category_route =
+  experience_actions_edit_category_route(create_category_id)

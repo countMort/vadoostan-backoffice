@@ -191,6 +191,10 @@ export const create_venue_form_validation_schema = Yup.object({
     .required("آدرس کامل الزامی است."),
   googleMap: Yup.string()
     .url("لینک گوگل مپ معتبر نیست.")
+    .matches(
+      /https:\/\/(www\.)?(google\.com\/maps|maps\.google\.com).*\/@-?\d+\.?\d*,-?\d+\.?\d*/,
+      "لینک گوگل مپ باید شامل مختصات (عرض و طول جغرافیایی) باشد."
+    )
     .required("لینک گوگل مپ الزامی است."),
 })
 
@@ -224,4 +228,15 @@ export const create_director_form_validation_schema = Yup.object({
       )
     )
     .min(1, "عکس مورد نیاز است."),
+})
+
+// Category form constants
+export const create_category_form_initial_values = {
+  faTitle: "",
+  enTitle: "",
+}
+
+export const create_category_form_validation_schema = Yup.object({
+  faTitle: Yup.string().required("عنوان فارسی الزامی است."),
+  enTitle: Yup.string().required("عنوان انگلیسی الزامی است."),
 })

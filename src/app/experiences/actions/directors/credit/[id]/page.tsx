@@ -103,11 +103,14 @@ export default function DirectorCredit({
       onSubmit={handleSubmit}
       validationSchema={create_director_form_validation_schema}
       formikRef={formikRef}
-      classNames={{ form: "grid grid-cols-12 gap-4" }}
-      loading={isLoading}
+      classNames={{ form: "grid grid-cols-12 gap-4 py-5" }}
     >
       {() => (
         <>
+          <div className="col-span-12">
+            {" "}
+            {!isEdit ? "ثبت" : "به روز رسانی"} تجربه گردان
+          </div>
           <TextField
             name="firstName"
             label="نام"
@@ -149,25 +152,20 @@ export default function DirectorCredit({
             classNames={{ wrapper: "col-span-12" }}
           />
 
-          <div className="col-span-12 flex gap-2">
+          <div className="col-span-12 flex gap-2 mt-4">
             <Button
               type="submit"
               variant="contained"
               className="!bg-primary"
-              disabled={isLoading}
+              loading={isLoading}
             >
-              {isLoading
-                ? isEdit
-                  ? "در حال ویرایش..."
-                  : "در حال ثبت..."
-                : isEdit
-                ? "ویرایش تجربه‌گردان"
-                : "ثبت تجربه‌گردان"}
+              {isEdit ? "ویرایش تجربه‌گردان" : "ثبت تجربه‌گردان"}
             </Button>
             <Button
               type="button"
               variant="outlined"
-              onClick={() => router.push("/experiences")}
+              onClick={() => router.back()}
+              disabled={isLoading}
             >
               انصراف
             </Button>

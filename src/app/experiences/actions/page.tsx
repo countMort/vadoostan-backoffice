@@ -3,6 +3,7 @@ import AddIcon from "@mui/icons-material/Add"
 import {
   experience_actions_create_venue_route,
   experience_actions_create_director_route,
+  experience_actions_create_category_route,
 } from "@/constants/route-names"
 import Link from "next/link"
 
@@ -15,6 +16,10 @@ export default function ExperienceActions() {
     {
       title: "تجربه گردان",
       href: experience_actions_create_director_route,
+    },
+    {
+      title: "قبیله",
+      href: experience_actions_create_category_route,
     },
   ]
 

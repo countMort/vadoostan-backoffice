@@ -11,7 +11,7 @@ export const venuesApi = mainApi.injectEndpoints({
           method: "POST",
           body,
         }),
-        invalidatesTags: [api_tags.experiences], // This will refresh the venues list in ExperienceCreationData
+        invalidatesTags: [api_tags.venues],
       }
     ),
   }),

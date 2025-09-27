@@ -23,6 +23,7 @@ export const experiencesApi = mainApi.injectEndpoints({
       void
     >({
       query: () => `admin/experiences/creation/data`,
+      providesTags: [api_tags.categories, api_tags.directors, api_tags.venues],
     }),
     createExperience: build.mutation<
       Response<CreateExperienceResponse>,

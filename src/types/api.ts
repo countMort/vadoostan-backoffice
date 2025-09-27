@@ -206,3 +206,9 @@ export interface UpdateDirectorArgs {
   directorId: string
   director: UpdateDirectorBody
 }
+
+// Category-related types
+export interface CreateCategoryBody {
+  faTitle: string
+  enTitle: string
+}

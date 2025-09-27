@@ -58,8 +58,8 @@ export default function VenueCredit({
       onSubmit={handleSubmit}
       validationSchema={create_venue_form_validation_schema}
       formikRef={formikRef}
-      classNames={{ form: "grid grid-cols-12 gap-4" }}
-      loading={isLoading || isCreatingVenue}
+      classNames={{ form: "grid grid-cols-12 gap-4 py-5" }}
+      loading={isLoading}
     >
       {({ setFieldValue }) => (
         <>
@@ -112,7 +112,7 @@ export default function VenueCredit({
             label="لینک گوگل مپ"
             dir="ltr"
             className="col-span-12"
-            placeholder="https://maps.google.com/..."
+            placeholder="https://maps.google.com/.../@35.7219,51.3347,15z"
           />
 
           <div className="col-span-12 flex gap-2">
@@ -120,14 +120,15 @@ export default function VenueCredit({
               type="submit"
               variant="contained"
               className="!bg-primary"
-              disabled={isCreatingVenue}
+              loading={isCreatingVenue}
             >
-              {isCreatingVenue ? "در حال ثبت..." : "ثبت مکان"}
+              ثبت مکان
             </Button>
             <Button
               type="button"
               variant="outlined"
-              onClick={() => router.push("/experiences")}
+              onClick={() => router.back()}
+              disabled={isCreatingVenue}
             >
               انصراف
             </Button>
