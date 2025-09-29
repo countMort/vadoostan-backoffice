@@ -33,6 +33,7 @@ import { setFormValues } from "./create.slice"
 import {
   experience_create_confirm_route,
   experience_edit_confirm_route,
+  createExpId,
 } from "@/constants/route-names"
 import FileInput from "@/components/Global/Form/FileInput"
 import { getFiles, setFiles, transformDataToForm } from "./utils"
@@ -48,7 +49,7 @@ export default function ExperienceForm({
 }) {
   const router = useRouter()
   const { id: expId } = use(params)
-  const isEdit = expId !== "create"
+  const isEdit = expId !== createExpId
   const formikRef = useRef<FormikProps<typeof formValues>>(null)
 
   const { data: { result: edittingData } = {} } = useGetExperienceQuery(
@@ -146,6 +147,9 @@ export default function ExperienceForm({
     >
       {({ values, setFieldValue }) => (
         <>
+          <div className="col-span-12">
+            {!isEdit ? "ایجاد" : "ویرایش"} تجربه
+          </div>
           <TextField
             name="title"
             label="تیتر"
