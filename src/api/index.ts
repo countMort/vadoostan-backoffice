@@ -16,7 +16,7 @@ export const mainApi = createApi({
       // if (endpoint !== "addExperiencePhotos")
       headers.set(
         "Authorization",
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIwMUpTVktOTkFYRFpOWjVOQkRUU0FaS1dQTSIsImNsaWVudCI6IndlYiIsImlhdCI6MTc1MTM3MzQwNn0.kiZlQquB_7bzZLOjem2B41xafF_h_6SUPqRuG5azBnQ"
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJSMjdFblRRTWZKckQiLCJjbGllbnQiOiJ3ZWIiLCJpYXQiOjE3NTkxNDEwODN9.-o4IET3fWjME5jefLcrbWskKNUSLsau7844PbfpxuwM"
       )
       return headers
     },

@@ -35,7 +35,6 @@ export interface CreateExperienceBody {
     answer: string
   }[]
   isSeries: boolean
-  creatorUserId: string
   cityId: number
   sessions: {
     time: string

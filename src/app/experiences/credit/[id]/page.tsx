@@ -142,7 +142,7 @@ export default function ExperienceForm({
       validationSchema={create_exp_form_validation_schema}
       loading={isLoading}
       formikRef={formikRef}
-      classNames={{ form: "grid grid-cols-12 gap-4" }}
+      classNames={{ form: "grid grid-cols-12 gap-4 py-5" }}
     >
       {({ values, setFieldValue }) => (
         <>

@@ -96,8 +96,7 @@ export default function Confirm({
         await updateExp({ exp: body, expId }).unwrap()
         toast("تجربه بروز شد.")
       } else {
-        const newBody = { ...body, creatorUserId: "01JSVKNNAXDZNZ5NBDTSAZKWPM" }
-        const result = await createExp(newBody).unwrap()
+        const result = await createExp(body).unwrap()
         toast("تجربه ساخته شد.")
         const formData = new FormData()
         images.forEach((img) => formData.append("files", img))

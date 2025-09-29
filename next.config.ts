@@ -14,6 +14,12 @@ const nextConfig: NextConfig = {
         port: "", // optional, only if using non-default port
         pathname: "/**", // allow all paths
       },
+      {
+        protocol: "https",
+        hostname: hostName,
+        port: "", // optional, only if using non-default port
+        pathname: "/**", // allow all paths
+      },
     ],
   },
   async rewrites() {
