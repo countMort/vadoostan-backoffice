@@ -1,6 +1,7 @@
 import { mainApi } from "@/api"
 import experiencesReducer from "@/app/experiences/experiences.slice"
 import globalReducer from "@/app/global.slice"
+import authReducer from "@/app/auth/auth.slice"
 import { configureStore } from "@reduxjs/toolkit"
 
 export const store = configureStore({
@@ -8,6 +9,7 @@ export const store = configureStore({
     [mainApi.reducerPath]: mainApi.reducer,
     global: globalReducer,
     experiences: experiencesReducer,
+    auth: authReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(mainApi.middleware),

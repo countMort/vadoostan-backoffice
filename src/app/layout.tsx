@@ -4,6 +4,7 @@ import { StoreProvider } from "@/store/Provider"
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter"
 import RtlProvider from "@/components/layout/RtlProvider"
 import AppThemeProvider from "@/components/layout/ThemeProvider"
+import AuthInitializer from "@/components/auth/AuthInitializer"
 import { ToastContainer } from "react-toastify"
 import { vazirmatn } from "@/assets/theme"
 
@@ -23,7 +24,10 @@ export default function RootLayout({
         <body className={"antialiased h-full"}>
           <AppRouterCacheProvider options={{ enableCssLayer: true }}>
             <AppThemeProvider>
-              <RtlProvider>{children}</RtlProvider>
+              <RtlProvider>
+                <AuthInitializer />
+                {children}
+              </RtlProvider>
             </AppThemeProvider>
           </AppRouterCacheProvider>
           <ToastContainer />

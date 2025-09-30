@@ -9,11 +9,12 @@ import {
   create_director_form_validation_schema,
 } from "@/constants/experiences"
 import { useRouter } from "next/navigation"
-import { use, useCallback, useRef } from "react"
+import { use, useCallback, useRef, useEffect } from "react"
 import { FormikProps } from "formik"
 import {
   useCreateDirectorMutation,
   useUpdateDirectorMutation,
+  useGetDirectorsQuery,
 } from "@/api/experiences/directors"
 import { toast } from "react-toastify"
 import { experience_actions_route } from "@/constants/route-names"
@@ -33,6 +34,36 @@ export default function DirectorCredit({
     useCreateDirectorMutation()
   const [updateDirector, { isLoading: isUpdatingDirector }] =
     useUpdateDirectorMutation()
+
+  // Fetch directors data for editing
+  const { data: directorsData, isLoading: isLoadingDirector } = useGetDirectorsQuery(
+    undefined,
+    { skip: !isEdit }
+  )
+
+  // Populate form with existing director data
+  useEffect(() => {
+    if (isEdit && directorsData?.result && formikRef.current) {
+      const directors = directorsData.result.directors
+      const director = directors.find(d => d.userId === directorId)
+      
+      if (director) {
+        // Split name into first and last name
+        const nameParts = director.name.split(' ')
+        const firstName = nameParts[0] || ''
+        const lastName = nameParts.slice(1).join(' ') || ''
+        
+        formikRef.current.setValues({
+          firstName,
+          lastName,
+          mobileNumber: '', // Not available in response
+          jobTitle: director.jobTitle,
+          bio: director.bio,
+          image: [] as File[], // Not handling existing image for now
+        })
+      }
+    }
+  }, [isEdit, directorsData, directorId])
 
   // Helper function to convert file to base64
   const fileToBase64 = (file: File): Promise<string> => {
@@ -54,7 +85,7 @@ export default function DirectorCredit({
       try {
         console.log("Director form data:", data)
 
-        const { image, ...directorData } = data
+        const { image, ...formData } = data
 
         // Convert image to base64 if provided
         let photoBase64 = ""
@@ -68,20 +99,33 @@ export default function DirectorCredit({
           }
         }
 
-        const directorPayload = {
-          ...directorData,
-          photo: photoBase64,
-        }
-
         if (isEdit) {
-          // Update existing director
+          // Find the director from the list
+          const directors = directorsData?.result?.directors || []
+          const director = directors.find(d => d.userId === directorId)
+          
+          // Update existing director - only bio and jobTitle
+          const updatePayload = {
+            firstName: director?.name.split(' ')[0] || '',
+            lastName: director?.name.split(' ').slice(1).join(' ') || '',
+            mobileNumber: '', // Not updating mobile number
+            jobTitle: data.jobTitle,
+            bio: data.bio,
+            photo: '', // Not updating photo
+          }
+          
           await updateDirector({
             directorId,
-            director: directorPayload,
+            director: updatePayload,
           }).unwrap()
           toast("تجربه‌گردان با موفقیت ویرایش شد.")
         } else {
           // Create new director
+          const directorPayload = {
+            ...formData,
+            photo: photoBase64,
+          }
+          
           await createDirector(directorPayload).unwrap()
           toast("تجربه‌گردان با موفقیت ثبت شد.")
         }
@@ -92,10 +136,18 @@ export default function DirectorCredit({
         toast("خطا در ثبت تجربه‌گردان. لطفاً دوباره تلاش کنید.")
       }
     },
-    [createDirector, updateDirector, directorId, isEdit, router]
+    [createDirector, updateDirector, directorId, isEdit, router, directorsData?.result?.directors]
   )
 
-  const isLoading = isCreatingDirector || isUpdatingDirector
+  const isLoading = isCreatingDirector || isUpdatingDirector || isLoadingDirector
+
+  if (isLoadingDirector) {
+    return (
+      <div className="flex justify-center items-center min-h-[200px]">
+        <div>در حال بارگذاری...</div>
+      </div>
+    )
+  }
 
   return (
     <Form
@@ -108,28 +160,38 @@ export default function DirectorCredit({
       {() => (
         <>
           <div className="col-span-12">
-            {" "}
             {!isEdit ? "ثبت" : "به روز رسانی"} تجربه گردان
           </div>
-          <TextField
-            name="firstName"
-            label="نام"
-            className="col-span-12 sm:col-span-6"
-          />
+          
+          {!isEdit && (
+            <>
+              <TextField
+                name="firstName"
+                label="نام"
+                className="col-span-12 sm:col-span-6"
+              />
 
-          <TextField
-            name="lastName"
-            label="نام خانوادگی"
-            className="col-span-12 sm:col-span-6"
-          />
+              <TextField
+                name="lastName"
+                label="نام خانوادگی"
+                className="col-span-12 sm:col-span-6"
+              />
 
-          <TextField
-            name="mobileNumber"
-            label="شماره موبایل"
-            className="col-span-12 sm:col-span-6"
-            placeholder="09123456789"
-            dir="ltr"
-          />
+              <TextField
+                name="mobileNumber"
+                label="شماره موبایل"
+                className="col-span-12 sm:col-span-6"
+                placeholder="09123456789"
+                dir="ltr"
+              />
+
+              <FileInput
+                name="image"
+                label="عکس تجربه‌گردان"
+                classNames={{ wrapper: "col-span-12" }}
+              />
+            </>
+          )}
 
           <TextField
             name="jobTitle"
@@ -144,12 +206,6 @@ export default function DirectorCredit({
             minRows={4}
             className="col-span-12"
             placeholder="بیوگرافی تجربه‌گردان را وارد کنید..."
-          />
-
-          <FileInput
-            name="image"
-            label="عکس تجربه‌گردان"
-            classNames={{ wrapper: "col-span-12" }}
           />
 
           <div className="col-span-12 flex gap-2 mt-4">

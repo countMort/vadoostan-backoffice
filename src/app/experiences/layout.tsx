@@ -9,6 +9,8 @@ import {
 } from "@/constants/route-names"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import ProtectedRoute from "@/components/auth/ProtectedRoute"
+import LogoutButton from "@/components/auth/LogoutButton"
 
 const buttons = [
   { label: "خلق تجربه", path: experience_create_route },
@@ -43,5 +45,9 @@ function Layout({ children }: { children: ReactNode }) {
 }
 
 export default function LayoutWrapper({ children }: { children: ReactNode }) {
-  return <Layout>{children}</Layout>
+  return (
+    <ProtectedRoute>
+      <Layout>{children}</Layout>
+    </ProtectedRoute>
+  )
 }

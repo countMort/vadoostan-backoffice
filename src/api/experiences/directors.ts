@@ -3,12 +3,20 @@ import {
   CreateDirectorResponse,
   UpdateDirectorArgs,
   Response,
+  DirectorsListResponse,
 } from "@/types/api"
 import { mainApi } from "../index"
 import { api_tags } from "@/constants/api-tags"
 
 export const directorsApi = mainApi.injectEndpoints({
   endpoints: (build) => ({
+    getDirectors: build.query<Response<DirectorsListResponse>, void>({
+      query: () => ({
+        url: "/directors",
+        method: "GET",
+      }),
+      providesTags: [api_tags.directors],
+    }),
     createDirector: build.mutation<
       Response<CreateDirectorResponse>,
       CreateDirectorBody
@@ -34,5 +42,8 @@ export const directorsApi = mainApi.injectEndpoints({
   }),
 })
 
-export const { useCreateDirectorMutation, useUpdateDirectorMutation } =
-  directorsApi
+export const { 
+  useGetDirectorsQuery,
+  useCreateDirectorMutation, 
+  useUpdateDirectorMutation 
+} = directorsApi

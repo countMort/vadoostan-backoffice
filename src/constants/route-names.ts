@@ -12,6 +12,8 @@ export const experience_actions_edit_venue_route = (id: string) =>
   `/experiences/actions/venues/credit/${id}`
 export const experience_actions_create_venue_route =
   experience_actions_edit_venue_route(create_venue_id)
+export const experience_actions_directors_route =
+  "/experiences/actions/directors"
 export const create_director_id = "create"
 export const experience_actions_edit_director_route = (id: string) =>
   `/experiences/actions/directors/credit/${id}`

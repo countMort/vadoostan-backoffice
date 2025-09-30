@@ -206,8 +206,54 @@ export interface UpdateDirectorArgs {
   director: UpdateDirectorBody
 }
 
+// Directors list response
+export interface DirectorsListResponse {
+  count: number
+  directors: DirectorResponse[]
+}
+
+// Single director response
+export interface DirectorResponse {
+  userId: string
+  name: string
+  bio: string
+  jobTitle: string
+  photoUrl: string
+}
+
 // Category-related types
 export interface CreateCategoryBody {
   faTitle: string
   enTitle: string
+}
+
+// Authentication-related types
+export interface LoginRequest {
+  username: string
+  password: string
+  client: "web"
+}
+
+export interface LoginResponse {
+  token: string
+  refreshToken: string
+  user: {
+    id: string
+    username: string
+    email: string
+    role: string
+  }
+}
+
+export interface AuthState {
+  token: string | null
+  refreshToken: string | null
+  user: {
+    id: string
+    username: string
+    email: string
+    role: string
+  } | null
+  isAuthenticated: boolean
+  isLoading: boolean
 }
