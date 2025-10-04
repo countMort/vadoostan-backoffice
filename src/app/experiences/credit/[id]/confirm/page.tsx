@@ -79,7 +79,7 @@ export default function Confirm({
             .format(be_time_format),
           description: data.sessions[0].description,
           duration: Number(data.sessions[0].duration),
-          venueId: Number(data.sessions[0].venue.id),
+          venueId: data.sessions[0].venue.id,
           price: Number(data.sessions[0].price),
           capacity: Number(data.sessions[0].capacity),
           groupLink: data.sessions[0].groupLink,

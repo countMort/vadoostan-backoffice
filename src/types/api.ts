@@ -20,7 +20,7 @@ export interface ExperienceCreationData {
   templates: []
   venues: {
     address: string
-    id: number
+    id: string
     location: { latitude: number; longitude: number }
     title: string
   }[]
@@ -41,7 +41,7 @@ export interface CreateExperienceBody {
     publishTime: string
     description: string
     duration: number
-    venueId: number
+    venueId: string
     price: number
     capacity: number
     groupLink: string
@@ -146,7 +146,7 @@ export interface CreateVenueBody {
 }
 
 export interface CreateVenueResponse {
-  id: number
+  id: string
   title: string
   fullAddress: string
   location: {

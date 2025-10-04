@@ -7,9 +7,10 @@ import FileInput from "@/components/Global/Form/FileInput"
 import {
   create_director_form_initial_values,
   create_director_form_validation_schema,
+  update_director_form_validation_schema,
 } from "@/constants/experiences"
 import { useRouter } from "next/navigation"
-import { use, useCallback, useRef, useEffect } from "react"
+import { use, useCallback, useRef, useEffect, useMemo } from "react"
 import { FormikProps } from "formik"
 import {
   useCreateDirectorMutation,
@@ -17,7 +18,8 @@ import {
   useGetDirectorsQuery,
 } from "@/api/experiences/directors"
 import { toast } from "react-toastify"
-import { experience_actions_route } from "@/constants/route-names"
+import { experience_actions_directors_route } from "@/constants/route-names"
+import { baseUrl } from "@/constants"
 
 export default function DirectorCredit({
   params,
@@ -25,7 +27,7 @@ export default function DirectorCredit({
   params: Promise<{ id: string }>
 }) {
   const router = useRouter()
-  const { id: directorId } = use(params) // Extract params for component hydration
+  const { id: directorId } = use(params)
   const isEdit = directorId !== "create"
   const formikRef =
     useRef<FormikProps<typeof create_director_form_initial_values>>(null)
@@ -36,34 +38,30 @@ export default function DirectorCredit({
     useUpdateDirectorMutation()
 
   // Fetch directors data for editing
-  const { data: directorsData, isLoading: isLoadingDirector } = useGetDirectorsQuery(
-    undefined,
-    { skip: !isEdit }
+  const {
+    data: { result: { directors } = {} } = {},
+    isLoading: isLoadingDirector,
+  } = useGetDirectorsQuery(undefined, { skip: !isEdit })
+  const director = useMemo(
+    () => directors?.find((d) => d.userId === directorId),
+    [directors, directorId]
   )
 
   // Populate form with existing director data
   useEffect(() => {
-    if (isEdit && directorsData?.result && formikRef.current) {
-      const directors = directorsData.result.directors
-      const director = directors.find(d => d.userId === directorId)
-      
+    if (isEdit && director && formikRef.current) {
       if (director) {
-        // Split name into first and last name
-        const nameParts = director.name.split(' ')
-        const firstName = nameParts[0] || ''
-        const lastName = nameParts.slice(1).join(' ') || ''
-        
         formikRef.current.setValues({
-          firstName,
-          lastName,
-          mobileNumber: '', // Not available in response
+          firstName: "",
+          lastName: "",
+          mobileNumber: "",
           jobTitle: director.jobTitle,
           bio: director.bio,
-          image: [] as File[], // Not handling existing image for now
+          image: [] as File[], // Start with empty, existing image shown via existingPhotoUrl
         })
       }
     }
-  }, [isEdit, directorsData, directorId])
+  }, [isEdit, director, directorId])
 
   // Helper function to convert file to base64
   const fileToBase64 = (file: File): Promise<string> => {
@@ -83,8 +81,6 @@ export default function DirectorCredit({
   const handleSubmit = useCallback(
     async (data: typeof create_director_form_initial_values) => {
       try {
-        console.log("Director form data:", data)
-
         const { image, ...formData } = data
 
         // Convert image to base64 if provided
@@ -100,20 +96,16 @@ export default function DirectorCredit({
         }
 
         if (isEdit) {
-          // Find the director from the list
-          const directors = directorsData?.result?.directors || []
-          const director = directors.find(d => d.userId === directorId)
-          
-          // Update existing director - only bio and jobTitle
+          // Update existing director - bio, jobTitle, and photo if provided
           const updatePayload = {
-            firstName: director?.name.split(' ')[0] || '',
-            lastName: director?.name.split(' ').slice(1).join(' ') || '',
-            mobileNumber: '', // Not updating mobile number
+            firstName: data.firstName,
+            lastName: data.lastName,
+            mobileNumber: data.mobileNumber, // Not updating mobile number
             jobTitle: data.jobTitle,
             bio: data.bio,
-            photo: '', // Not updating photo
+            photo: photoBase64, // Include photo if uploaded
           }
-          
+
           await updateDirector({
             directorId,
             director: updatePayload,
@@ -125,21 +117,22 @@ export default function DirectorCredit({
             ...formData,
             photo: photoBase64,
           }
-          
+
           await createDirector(directorPayload).unwrap()
           toast("تجربه‌گردان با موفقیت ثبت شد.")
         }
 
-        router.push(experience_actions_route)
+        router.push(experience_actions_directors_route)
       } catch (error) {
         console.error("Error creating/updating director:", error)
         toast("خطا در ثبت تجربه‌گردان. لطفاً دوباره تلاش کنید.")
       }
     },
-    [createDirector, updateDirector, directorId, isEdit, router, directorsData?.result?.directors]
+    [createDirector, updateDirector, directorId, isEdit, router]
   )
 
-  const isLoading = isCreatingDirector || isUpdatingDirector || isLoadingDirector
+  const isLoading =
+    isCreatingDirector || isUpdatingDirector || isLoadingDirector
 
   if (isLoadingDirector) {
     return (
@@ -153,7 +146,11 @@ export default function DirectorCredit({
     <Form
       initialValues={create_director_form_initial_values}
       onSubmit={handleSubmit}
-      validationSchema={create_director_form_validation_schema}
+      validationSchema={
+        isEdit
+          ? update_director_form_validation_schema
+          : create_director_form_validation_schema
+      }
       formikRef={formikRef}
       classNames={{ form: "grid grid-cols-12 gap-4 py-5" }}
     >
@@ -162,8 +159,8 @@ export default function DirectorCredit({
           <div className="col-span-12">
             {!isEdit ? "ثبت" : "به روز رسانی"} تجربه گردان
           </div>
-          
-          {!isEdit && (
+
+          {!isEdit ? (
             <>
               <TextField
                 name="firstName"
@@ -184,14 +181,31 @@ export default function DirectorCredit({
                 placeholder="09123456789"
                 dir="ltr"
               />
-
-              <FileInput
-                name="image"
-                label="عکس تجربه‌گردان"
-                classNames={{ wrapper: "col-span-12" }}
-              />
             </>
+          ) : (
+            <TextField
+              className="col-span-12 sm:col-span-6"
+              name="name"
+              label="نام تجربه‌گردان"
+              value={director?.name}
+              disabled
+            />
           )}
+          <FileInput
+            name="image"
+            label="عکس تجربه‌گردان"
+            classNames={{ wrapper: "col-span-12" }}
+            multiple={false}
+            existingImageUrl={
+              isEdit && director?.photoUrl
+                ? { id: director.userId, url: baseUrl + director.photoUrl }
+                : undefined
+            }
+            onDeleteExisting={(id) => {
+              console.log("Delete existing director photo with id:", id)
+              // TODO: Implement delete API call here
+            }}
+          />
 
           <TextField
             name="jobTitle"

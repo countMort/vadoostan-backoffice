@@ -61,6 +61,10 @@ export const catDic = {
     label: "زبان",
     color: "#A1C8F6",
   },
+  beauty: {
+    label: "زیبایی",
+    color: "#EFEC9C",
+  },
 }
 
 export const defaultCity = {
@@ -98,7 +102,7 @@ export const create_exp_form_initial_values = {
       },
       groupLink: "",
       venue: {
-        id: "" as number | "",
+        id: "" as string,
         title: "",
         address: "",
       },
@@ -144,7 +148,7 @@ export const create_exp_form_validation_schema = Yup.object({
         duration: Yup.string().required("مدت زمان تجربه الزامی است."),
         time: Yup.string().required("تاریخ برگزاری مورد نیاز است."),
         venue: Yup.object({
-          id: Yup.number().required("محل برگزاری تجربه مورد نیاز است."),
+          id: Yup.string().required("محل برگزاری تجربه مورد نیاز است."),
         }).required("محل برگزاری تجربه مورد نیاز است."),
         price: Yup.number()
           .required("هزینه جلسه مورد نیاز است.")
@@ -208,17 +212,20 @@ export const create_director_form_initial_values = {
   image: [] as File[],
 }
 
+const common_director_form_validation_schema = {
+  jobTitle: Yup.string().required("عنوان شغلی الزامی است."),
+  bio: Yup.string()
+    .min(10, "حداقل 10 کارکتر")
+    .max(500, "تعداد کارکتر از 500 بیشتر نمی‌تواند باشد.")
+    .required("بیوگرافی الزامی است."),
+}
 export const create_director_form_validation_schema = Yup.object({
   firstName: Yup.string().required("نام الزامی است."),
   lastName: Yup.string().required("نام خانوادگی الزامی است."),
   mobileNumber: Yup.string()
     .matches(/^09\d{9}$/, "شماره موبایل معتبر نیست (مثال: 09123456789)")
     .required("شماره موبایل الزامی است."),
-  jobTitle: Yup.string().required("عنوان شغلی الزامی است."),
-  bio: Yup.string()
-    .min(10, "حداقل 10 کارکتر")
-    .max(500, "تعداد کارکتر از 500 بیشتر نمی‌تواند باشد.")
-    .required("بیوگرافی الزامی است."),
+  ...common_director_form_validation_schema,
   image: Yup.array()
     .of(
       Yup.mixed().test(
@@ -228,6 +235,17 @@ export const create_director_form_validation_schema = Yup.object({
       )
     )
     .min(1, "عکس مورد نیاز است."),
+})
+
+export const update_director_form_validation_schema = Yup.object({
+  ...common_director_form_validation_schema,
+  image: Yup.array().of(
+    Yup.mixed().test(
+      "fileSize",
+      "حجم فایل بالاست (max 1 MB)",
+      (file) => !file || (file as File).size <= 1 * 1024 * 1024 // 1 MB
+    )
+  ),
 })
 
 // Category form constants

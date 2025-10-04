@@ -38,7 +38,6 @@ import {
 import FileInput from "@/components/Global/Form/FileInput"
 import { getFiles, setFiles, transformDataToForm } from "./utils"
 import { useRouter } from "next/navigation"
-import { FileInputPreview } from "@/components/Global/Form/Partials/FileInputPreview"
 import { RegistrationsList } from "@/components/experiences/RegistrationsList"
 import Checkbox from "@/components/Global/Form/Checkbox"
 import { baseUrl } from "@/constants"
@@ -122,7 +121,7 @@ export default function ExperienceForm({
   }, [])
 
   const getVenue = useCallback(
-    (venueId: number | "") => {
+    (venueId: string) => {
       return creationData?.result.venues.find((venue) => venue.id === venueId)
     },
     [creationData?.result.venues]
@@ -402,7 +401,7 @@ export default function ExperienceForm({
                       select
                       className="col-span-12 sm:col-span-6"
                       onChange={(e) => {
-                        const venueId = Number(e.target.value)
+                        const venueId = e.target.value
                         setFieldValue(`sessions[${index}].venue.id`, venueId)
 
                         const venue = getVenue(venueId)
@@ -447,19 +446,22 @@ export default function ExperienceForm({
                     label="عکس های تجربه"
                     name="images"
                     classNames={{ wrapper: "col-span-12 sm:col-span-6" }}
+                    multiple={true}
+                    existingImageUrl={
+                      isEdit && formikRef.current
+                        ? formikRef.current.values.expPhotos.map(
+                            (photo) => ({
+                              id: photo.id,
+                              url: baseUrl + "/" + photo.url
+                            })
+                          )
+                        : undefined
+                    }
+                    onDeleteExisting={(id) => {
+                      console.log('Delete existing photo with id:', id)
+                      // TODO: Implement delete API call here
+                    }}
                   />
-                  {isEdit && formikRef.current && (
-                    <FileInputPreview
-                      className="col-span-12 sm:col-span-6"
-                      images={formikRef.current.values.expPhotos.map(
-                        (photo) => ({
-                          url: baseUrl + "/" + photo.url,
-                          alt: `photo-${photo.id}`,
-                        })
-                      )}
-                      disabled={isEdit}
-                    />
-                  )}
                 </div>
               ))
             }
