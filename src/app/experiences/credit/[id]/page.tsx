@@ -158,7 +158,6 @@ export default function ExperienceForm({
             className="md:col-span-8 col-span-12"
             name="description"
             label="توضیحات"
-            maxChar={400}
             minRows={3}
             multiline
           />
@@ -209,15 +208,13 @@ export default function ExperienceForm({
                         label="پاسخ"
                       />
                     </div>
-                    {index > 0 && (
-                      <button
-                        type="button"
-                        onClick={() => remove(index)}
-                        className="text-sm text-red-600 mt-1"
-                      >
-                        <TrashIcon />
-                      </button>
-                    )}
+                    <button
+                      type="button"
+                      onClick={() => remove(index)}
+                      className="text-sm text-red-600 mt-1"
+                    >
+                      <TrashIcon />
+                    </button>
                   </div>
                 ))}
 
@@ -449,16 +446,14 @@ export default function ExperienceForm({
                     multiple={true}
                     existingImageUrl={
                       isEdit && formikRef.current
-                        ? formikRef.current.values.expPhotos.map(
-                            (photo) => ({
-                              id: photo.id,
-                              url: baseUrl + "/" + photo.url
-                            })
-                          )
+                        ? formikRef.current.values.expPhotos.map((photo) => ({
+                            id: photo.id,
+                            url: baseUrl + "/" + photo.url,
+                          }))
                         : undefined
                     }
                     onDeleteExisting={(id) => {
-                      console.log('Delete existing photo with id:', id)
+                      console.log("Delete existing photo with id:", id)
                       // TODO: Implement delete API call here
                     }}
                   />

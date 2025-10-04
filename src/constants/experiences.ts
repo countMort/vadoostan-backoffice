@@ -123,7 +123,6 @@ export const create_exp_form_validation_schema = Yup.object({
   // email: Yup.string().email("Invalid email").required("Email is required"),
   description: Yup.string()
     .min(10, "حداقل 10 کارکتر")
-    .max(400, "تعداد کارکتر از 400 بیشتر نمی‌تواند باشد.")
     .required("توضیحات الزامی است."),
   category: Yup.object({
     id: Yup.number().required("دسته بندی قبیله مورد نیاز است."),
@@ -131,14 +130,12 @@ export const create_exp_form_validation_schema = Yup.object({
   city: Yup.object({
     id: Yup.number().required("شهر مورد نیاز است."),
   }),
-  faqs: Yup.array()
-    .of(
-      Yup.object({
-        question: Yup.string().required("سوال نمی‌تواند خالی باشد."),
-        answer: Yup.string().required("پاسخ نمی‌تواند خالی باشد."),
-      })
-    )
-    .min(1, "حداقل یک پرسش پرتکرار مورد نیاز است."),
+  faqs: Yup.array().of(
+    Yup.object({
+      question: Yup.string().required("سوال نمی‌تواند خالی باشد."),
+      answer: Yup.string().required("پاسخ نمی‌تواند خالی باشد."),
+    })
+  ),
   sessions: Yup.array()
     .of(
       Yup.object({
