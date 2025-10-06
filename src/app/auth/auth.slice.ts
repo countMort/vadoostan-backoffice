@@ -5,7 +5,7 @@ import { authUtils } from "@/utils/auth"
 const initialState: AuthState = {
   token: null,
   refreshToken: null,
-  user: null,
+  // user: null,
   isAuthenticated: false,
   isLoading: false,
 }
@@ -22,9 +22,9 @@ export const authSlice = createSlice({
       state.isAuthenticated = true
       state.token = action.payload.token
       state.refreshToken = action.payload.refreshToken
-      state.user = action.payload.user
-      
-      // Store tokens in localStorage
+      // state.user = action.payload.user
+
+      // Store tokens in cookies
       authUtils.storeToken(action.payload.token)
       authUtils.storeRefreshToken(action.payload.refreshToken)
     },
@@ -33,16 +33,16 @@ export const authSlice = createSlice({
       state.isAuthenticated = false
       state.token = null
       state.refreshToken = null
-      state.user = null
+      // state.user = null
     },
     logout: (state) => {
       state.isAuthenticated = false
       state.token = null
       state.refreshToken = null
-      state.user = null
+      // state.user = null
       state.isLoading = false
-      
-      // Clear tokens from localStorage
+
+      // Clear tokens from cookies
       authUtils.clearStoredTokens()
     },
     setToken: (state, action: PayloadAction<string>) => {
@@ -53,10 +53,10 @@ export const authSlice = createSlice({
       state.isAuthenticated = false
       state.token = null
       state.refreshToken = null
-      state.user = null
+      // state.user = null
       state.isLoading = false
-      
-      // Clear tokens from localStorage
+
+      // Clear tokens from cookies
       authUtils.clearStoredTokens()
     },
   },

@@ -157,6 +157,40 @@ export interface CreateVenueResponse {
   neighborhood: string
 }
 
+export interface UpdateVenueBody {
+  title: string
+  fullAddress: string
+  location: {
+    latitude: number
+    longitude: number
+  }
+  cityId: number
+  neighborhood: string
+}
+
+export interface UpdateVenueArgs {
+  venueId: string
+  venue: UpdateVenueBody
+}
+
+// Venues list response
+export type VenuesListResponse = VenueResponse[]
+
+// Single venue response
+export interface VenueResponse {
+  id: string
+  title: string
+  address: {
+    neighborhood: string
+    exact: string
+  }
+  location: {
+    latitude: number
+    longitude: number
+  }
+  cityId: number
+}
+
 export interface GetExperienceRegistrationsArgs {
   expId: string
 }
@@ -237,23 +271,17 @@ export interface LoginRequest {
 export interface LoginResponse {
   token: string
   refreshToken: string
-  user: {
-    id: string
-    username: string
-    email: string
-    role: string
-  }
 }
 
 export interface AuthState {
   token: string | null
   refreshToken: string | null
-  user: {
-    id: string
-    username: string
-    email: string
-    role: string
-  } | null
+  // user: {
+  //   id: string
+  //   username: string
+  //   email: string
+  //   role: string
+  // } | null
   isAuthenticated: boolean
   isLoading: boolean
 }

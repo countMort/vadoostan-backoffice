@@ -1,6 +1,6 @@
 import { CreateCategoryBody, Response } from "@/types/api"
 import { mainApi } from "../index"
-import { api_tags } from "@/constants/api-tags"
+import { api_tags } from "@/constants/api"
 
 export const categoriesApi = mainApi.injectEndpoints({
   endpoints: (build) => ({

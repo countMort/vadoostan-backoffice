@@ -4,6 +4,7 @@ import { useSelector } from "react-redux"
 import { RootState } from "@/store"
 import { useRouter } from "next/navigation"
 import { useEffect, ReactNode } from "react"
+import { login_route } from "@/constants/route-names"
 
 interface ProtectedRouteProps {
   children: ReactNode
@@ -15,26 +16,26 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   )
   const router = useRouter()
 
-  // useEffect(() => {
-  //   if (!isLoading && !isAuthenticated) {
-  //     router.push("/login")
-  //   }
-  // }, [isAuthenticated, isLoading, router])
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      router.push(login_route)
+    }
+  }, [isAuthenticated, isLoading, router])
 
-  // if (isLoading) {
-  //   return (
-  //     <div className="flex items-center justify-center min-h-screen">
-  //       <div className="text-center">
-  //         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-  //         <p className="mt-4 text-gray-600">در حال بارگذاری...</p>
-  //       </div>
-  //     </div>
-  //   )
-  // }
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+          <p className="mt-4 text-gray-600">در حال بارگذاری...</p>
+        </div>
+      </div>
+    )
+  }
 
-  // if (!isAuthenticated) {
-  //   return null
-  // }
+  if (!isAuthenticated) {
+    return null
+  }
 
   return <>{children}</>
 }

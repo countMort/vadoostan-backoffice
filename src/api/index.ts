@@ -2,7 +2,7 @@ import { RootState } from "@/store"
 import type { Action, PayloadAction } from "@reduxjs/toolkit"
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 import { HYDRATE } from "next-redux-wrapper"
-import { api_tags } from "@/constants/api-tags"
+import { api_tags } from "@/constants/api"
 function isHydrateAction(action: Action): action is PayloadAction<RootState> {
   return action.type === HYDRATE
 }
@@ -17,12 +17,7 @@ export const mainApi = createApi({
       const token = state.auth.token
 
       if (token) {
-        headers.set("Authorization", `Bearer ${token}`)
-      } else {
-        headers.set(
-          "Authorization",
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJSMjdFblRRTWZKckQiLCJjbGllbnQiOiJ3ZWIiLCJpYXQiOjE3NTkxNDEwODN9.-o4IET3fWjME5jefLcrbWskKNUSLsau7844PbfpxuwM"
-        )
+        headers.set("Authorization", token)
       }
 
       return headers

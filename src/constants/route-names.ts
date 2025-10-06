@@ -1,3 +1,4 @@
+export const login_route = "/auth/login"
 export const experiences_route = "/experiences"
 export const experience_edit_route = (id: string) => "/experiences/credit/" + id
 export const createExpId = "create"
@@ -7,6 +8,7 @@ export const experience_edit_confirm_route = (id: string) =>
 export const experience_create_confirm_route =
   experience_edit_confirm_route(createExpId)
 export const experience_actions_route = "/experiences/actions"
+export const experience_actions_venues_route = "/experiences/actions/venues"
 export const create_venue_id = "create"
 export const experience_actions_edit_venue_route = (id: string) =>
   `/experiences/actions/venues/credit/${id}`

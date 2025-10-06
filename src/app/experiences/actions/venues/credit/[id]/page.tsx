@@ -6,13 +6,18 @@ import TextField from "@/components/Global/Form/TextField"
 import {
   create_venue_form_initial_values,
   create_venue_form_validation_schema,
+  update_venue_form_validation_schema,
   defaultCity,
 } from "@/constants/experiences"
 import { useRouter } from "next/navigation"
-import { use, useCallback, useRef } from "react"
+import { use, useCallback, useRef, useEffect, useMemo } from "react"
 import { FormikProps } from "formik"
 import { useGetExperienceCreationDataQuery } from "@/api/experiences"
-import { useCreateVenueMutation } from "@/api/experiences/venues"
+import {
+  useCreateVenueMutation,
+  useUpdateVenueMutation,
+  useGetVenuesQuery,
+} from "@/api/experiences/venues"
 import { toast } from "react-toastify"
 import { experience_actions_route } from "@/constants/route-names"
 
@@ -22,14 +27,47 @@ export default function VenueCredit({
   params: Promise<{ id: string }>
 }) {
   const router = useRouter()
-  use(params) // Extract params for component hydration
+  const { id: venueId } = use(params)
+  const isEdit = venueId !== "create"
   const formikRef =
     useRef<FormikProps<typeof create_venue_form_initial_values>>(null)
 
-  const { data: { result: creationData } = {}, isLoading } =
-    useGetExperienceCreationDataQuery()
+  const {
+    data: { result: creationData } = {},
+    isLoading: isLoadingCreationData,
+  } = useGetExperienceCreationDataQuery()
 
   const [createVenue, { isLoading: isCreatingVenue }] = useCreateVenueMutation()
+  const [updateVenue, { isLoading: isUpdatingVenue }] = useUpdateVenueMutation()
+
+  // Fetch venues data for editing
+  const { data: { result: venues } = {}, isLoading: isLoadingVenue } =
+    useGetVenuesQuery(undefined, { skip: !isEdit })
+
+  const venue = useMemo(
+    () => venues?.find((v) => v.id === venueId),
+    [venues, venueId]
+  )
+
+  // Populate form with existing venue data
+  useEffect(() => {
+    if (isEdit && venue && formikRef.current) {
+      if (venue) {
+        // Convert coordinates back to Google Maps URL format
+        const googleMapUrl = `https://maps.google.com/@${venue.location.latitude},${venue.location.longitude},15z`
+
+        formikRef.current.setValues({
+          title: venue.title,
+          neighborhood: venue.address.neighborhood,
+          city:
+            creationData?.cities.find((city) => city.id === venue.cityId) ||
+            defaultCity,
+          fullAddress: venue.address.exact,
+          googleMap: googleMapUrl,
+        })
+      }
+    }
+  }, [isEdit, venue, venueId, creationData])
 
   const handleSubmit = useCallback(
     async (data: typeof create_venue_form_initial_values) => {
@@ -43,27 +81,61 @@ export default function VenueCredit({
           cityId: data.city.id,
           neighborhood: data.neighborhood,
         }
-        await createVenue(body).unwrap()
-        toast("مکان با موفقیت ثبت شد.")
+
+        if (isEdit) {
+          // Update existing venue
+          await updateVenue({
+            venueId,
+            venue: body,
+          }).unwrap()
+          toast("مکان با موفقیت ویرایش شد.")
+        } else {
+          // Create new venue
+          await createVenue(body).unwrap()
+          toast("مکان با موفقیت ثبت شد.")
+        }
+
         router.push(experience_actions_route)
       } catch (error) {
-        console.error("Error creating venue:", error)
+        console.error("Error creating/updating venue:", error)
+        toast("خطا در ثبت مکان. لطفاً دوباره تلاش کنید.")
       }
     },
-    [createVenue, router]
+    [createVenue, updateVenue, venueId, isEdit, router]
   )
+
+  const isLoading =
+    isCreatingVenue ||
+    isUpdatingVenue ||
+    isLoadingVenue ||
+    isLoadingCreationData
+
+  if (isLoadingVenue || isLoadingCreationData) {
+    return (
+      <div className="flex justify-center items-center min-h-[200px]">
+        <div>در حال بارگذاری...</div>
+      </div>
+    )
+  }
+
   return (
     <Form
       initialValues={create_venue_form_initial_values}
       onSubmit={handleSubmit}
-      validationSchema={create_venue_form_validation_schema}
+      validationSchema={
+        isEdit
+          ? update_venue_form_validation_schema
+          : create_venue_form_validation_schema
+      }
       formikRef={formikRef}
       classNames={{ form: "grid grid-cols-12 gap-4 py-5" }}
       loading={isLoading}
     >
       {({ setFieldValue }) => (
         <>
-          <div className="col-span-12">ایجاد مکان جدید</div>
+          <div className="col-span-12">
+            {!isEdit ? "ایجاد مکان جدید" : "ویرایش مکان"}
+          </div>
           <TextField
             name="title"
             label="نام مکان"
@@ -121,15 +193,15 @@ export default function VenueCredit({
               type="submit"
               variant="contained"
               className="!bg-primary"
-              loading={isCreatingVenue}
+              loading={isLoading}
             >
-              ثبت مکان
+              {isEdit ? "ویرایش مکان" : "ثبت مکان"}
             </Button>
             <Button
               type="button"
               variant="outlined"
               onClick={() => router.back()}
-              disabled={isCreatingVenue}
+              disabled={isLoading}
             >
               انصراف
             </Button>

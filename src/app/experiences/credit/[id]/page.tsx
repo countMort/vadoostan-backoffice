@@ -444,7 +444,7 @@ export default function ExperienceForm({
                     name="images"
                     classNames={{ wrapper: "col-span-12 sm:col-span-6" }}
                     multiple={true}
-                    existingImageUrl={
+                    existingImageUrls={
                       isEdit && formikRef.current
                         ? formikRef.current.values.expPhotos.map((photo) => ({
                             id: photo.id,

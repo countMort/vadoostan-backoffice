@@ -6,7 +6,7 @@ import {
   DirectorsListResponse,
 } from "@/types/api"
 import { mainApi } from "../index"
-import { api_tags } from "@/constants/api-tags"
+import { api_tags } from "@/constants/api"
 
 export const directorsApi = mainApi.injectEndpoints({
   endpoints: (build) => ({

@@ -9,8 +9,6 @@ import {
 } from "@/constants/route-names"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import ProtectedRoute from "@/components/auth/ProtectedRoute"
-import LogoutButton from "@/components/auth/LogoutButton"
 
 const buttons = [
   { label: "خلق تجربه", path: experience_create_route },
@@ -23,7 +21,7 @@ function Layout({ children }: { children: ReactNode }) {
 
   return (
     <>
-      <div className="mx-auto max-w-3xl my-10 rounded-sm mb-16">{children}</div>
+      <div className="mx-auto max-w-3xl mt-10 mb-18 rounded-sm">{children}</div>
       <footer className="fixed bottom-0 left-0 z-20 w-full h-16 bg-white border-t border-gray-200 shadow-sm dark:bg-gray-800 dark:border-gray-600">
         <ButtonGroup className="flex items-stretch h-full w-full">
           {buttons.map((btn) => (
@@ -45,9 +43,5 @@ function Layout({ children }: { children: ReactNode }) {
 }
 
 export default function LayoutWrapper({ children }: { children: ReactNode }) {
-  return (
-    <ProtectedRoute>
-      <Layout>{children}</Layout>
-    </ProtectedRoute>
-  )
+  return <Layout>{children}</Layout>
 }

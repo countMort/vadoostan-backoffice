@@ -199,6 +199,9 @@ export const create_venue_form_validation_schema = Yup.object({
     .required("لینک گوگل مپ الزامی است."),
 })
 
+export const update_venue_form_validation_schema =
+  create_venue_form_validation_schema
+
 // Director form constants
 export const create_director_form_initial_values = {
   firstName: "",

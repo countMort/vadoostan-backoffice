@@ -1,68 +1,30 @@
-import { store } from "@/store"
-import { setToken, clearAuth } from "@/app/auth/auth.slice"
+import { api_keys } from "@/constants/api"
+import { cookieUtils } from "./cookies.util"
 
 export const authUtils = {
-  // Get token from localStorage
+  // Get token from cookies
   getStoredToken: (): string | null => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("auth_token")
-    }
-    return null
+    return cookieUtils.getCookie(api_keys.token)
   },
 
-  // Get refresh token from localStorage
+  // Get refresh token from cookies
   getStoredRefreshToken: (): string | null => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("refresh_token")
-    }
-    return null
+    return cookieUtils.getCookie(api_keys.refreshToken)
   },
 
-  // Store token in localStorage
+  // Store token in cookies
   storeToken: (token: string): void => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("auth_token", token)
-    }
+    cookieUtils.setCookie(api_keys.token, token, 7) // 7 days expiration
   },
 
-  // Store refresh token in localStorage
+  // Store refresh token in cookies
   storeRefreshToken: (refreshToken: string): void => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("refresh_token", refreshToken)
-    }
+    cookieUtils.setCookie(api_keys.refreshToken, refreshToken, 30) // 30 days expiration
   },
 
-  // Remove tokens from localStorage
+  // Remove tokens from cookies
   clearStoredTokens: (): void => {
-    if (typeof window !== "undefined") {
-      localStorage.removeItem("auth_token")
-      localStorage.removeItem("refresh_token")
-    }
-  },
-
-  // Initialize auth state from localStorage
-  initializeAuth: (): void => {
-    const token = authUtils.getStoredToken()
-    if (token) {
-      store.dispatch(setToken(token))
-    }
-  },
-
-  // Clear auth state and stored tokens
-  clearAuth: (): void => {
-    authUtils.clearStoredTokens()
-    store.dispatch(clearAuth())
-  },
-
-  // Check if user is authenticated
-  isAuthenticated: (): boolean => {
-    const state = store.getState()
-    return state.auth.isAuthenticated
-  },
-
-  // Get current user from store
-  getCurrentUser: () => {
-    const state = store.getState()
-    return state.auth.user
+    cookieUtils.removeCookie(api_keys.token)
+    cookieUtils.removeCookie(api_keys.refreshToken)
   },
 }

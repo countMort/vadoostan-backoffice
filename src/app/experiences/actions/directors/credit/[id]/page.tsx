@@ -196,9 +196,9 @@ export default function DirectorCredit({
             label="عکس تجربه‌گردان"
             classNames={{ wrapper: "col-span-12" }}
             multiple={false}
-            existingImageUrl={
+            existingImageUrls={
               isEdit && director?.photoUrl
-                ? { id: director.userId, url: baseUrl + director.photoUrl }
+                ? [{ id: director.userId, url: baseUrl + director.photoUrl }]
                 : undefined
             }
             onDeleteExisting={(id) => {

@@ -1,7 +1,7 @@
 import { Button } from "@mui/material"
 import AddIcon from "@mui/icons-material/Add"
 import {
-  experience_actions_create_venue_route,
+  experience_actions_venues_route,
   experience_actions_directors_route,
   experience_actions_create_category_route,
 } from "@/constants/route-names"
@@ -11,8 +11,7 @@ export default function ExperienceActions() {
   const buttons = [
     {
       title: "مکان برگزاری",
-      href: experience_actions_create_venue_route,
-      icon: <AddIcon className="ml-1" />,
+      href: experience_actions_venues_route,
     },
     {
       title: "تجربه گردان",

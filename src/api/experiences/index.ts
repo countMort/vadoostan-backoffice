@@ -14,7 +14,7 @@ import {
 } from "@/types/api"
 import { mainApi } from "../index"
 import { experienceListTranformer } from "../transformers/experiences"
-import { api_tags } from "@/constants/api-tags"
+import { api_tags } from "@/constants/api"
 
 export const experiencesApi = mainApi.injectEndpoints({
   endpoints: (build) => ({

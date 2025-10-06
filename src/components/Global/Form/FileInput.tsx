@@ -11,8 +11,8 @@ export interface ExistingImage {
 
 interface FileInputProps extends BaseInputProps {
   multiple?: boolean
-  existingImageUrl?: string | string[] | ExistingImage | ExistingImage[] // URL(s) or existing image objects
-  onDeleteExisting?: (id: string | number) => void // Callback when existing image is deleted
+  existingImageUrls?: ExistingImage[]
+  onDeleteExisting?: (id: string | number) => void
 }
 
 export default function FileInput({
@@ -21,7 +21,7 @@ export default function FileInput({
   name,
   disabled,
   multiple = true,
-  existingImageUrl,
+  existingImageUrls,
   onDeleteExisting,
   ...rest
 }: FileInputProps) {
@@ -40,8 +40,21 @@ export default function FileInput({
     if (multiple) {
       helpers.setValue([...files, ...fileList])
     } else {
-      // For single file mode, replace with the new file
-      helpers.setValue(fileList.length > 0 ? [fileList[0]] : [])
+      // For single file mode, replace with the new file and clear existing images
+      if (fileList.length > 0) {
+        helpers.setValue([fileList[0]])
+        // Clear any existing images when uploading new file in single mode
+        if (existingImageUrls && existingImageUrls.length > 0) {
+          existingImageUrls.forEach((img) => {
+            if (img.id !== undefined) {
+              setDeletedExistingIds((prev) => new Set([...prev, img.id!]))
+              onDeleteExisting?.(img.id)
+            }
+          })
+        }
+      } else {
+        helpers.setValue([])
+      }
     }
   }
 
@@ -50,26 +63,8 @@ export default function FileInput({
     helpers.setValue(updated)
   }
 
-  // Create existing images array from existingImageUrl
-  const parseExistingImages = (
-    source: FileInputProps["existingImageUrl"]
-  ): ExistingImage[] => {
-    if (!source) return []
-
-    if (Array.isArray(source)) {
-      return source.map((item, index) => {
-        if (typeof item === "string") {
-          return { url: item, id: index }
-        }
-        return item as ExistingImage
-      })
-    } else if (typeof source === "string") {
-      return [{ url: source, id: 0 }]
-    }
-    return [source]
-  }
-
-  const allExistingImages = parseExistingImages(existingImageUrl)
+  // Use existingImageUrl directly since it's now typed as ExistingImage[]
+  const allExistingImages = existingImageUrls || []
 
   // Filter out deleted existing images
   const remainingExistingImages = allExistingImages.filter(
