@@ -7,7 +7,6 @@ import AppThemeProvider from "@/components/layout/ThemeProvider"
 import AuthInitializer from "@/components/auth/AuthInitializer"
 import { ToastContainer } from "react-toastify"
 import { vazirmatn } from "@/assets/theme"
-import ProtectedRoute from "@/components/auth/ProtectedRoute"
 
 export const metadata: Metadata = {
   title: "و دوستان بک آفیس",
@@ -27,7 +26,7 @@ export default function RootLayout({
             <AppThemeProvider>
               <RtlProvider>
                 <AuthInitializer />
-                <ProtectedRoute>{children}</ProtectedRoute>
+                {children}
               </RtlProvider>
             </AppThemeProvider>
           </AppRouterCacheProvider>

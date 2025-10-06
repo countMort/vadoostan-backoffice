@@ -2,8 +2,8 @@
 
 import { useSelector } from "react-redux"
 import { RootState } from "@/store"
-import { useRouter } from "next/navigation"
-import { useEffect, ReactNode } from "react"
+import { ReactNode } from "react"
+import { redirect } from "next/navigation"
 import { login_route } from "@/constants/route-names"
 
 interface ProtectedRouteProps {
@@ -14,13 +14,6 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   const { isAuthenticated, isLoading } = useSelector(
     (state: RootState) => state.auth
   )
-  const router = useRouter()
-
-  useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      router.push(login_route)
-    }
-  }, [isAuthenticated, isLoading, router])
 
   if (isLoading) {
     return (
@@ -34,7 +27,7 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   }
 
   if (!isAuthenticated) {
-    return null
+    return redirect(login_route)
   }
 
   return <>{children}</>
