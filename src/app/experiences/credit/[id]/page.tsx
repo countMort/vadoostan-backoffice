@@ -41,6 +41,7 @@ import { useRouter } from "next/navigation"
 import { RegistrationsList } from "@/components/experiences/RegistrationsList"
 import Checkbox from "@/components/Global/Form/Checkbox"
 import { baseUrl } from "@/constants"
+import Spinner from "@/components/Global/Loading/Spinner"
 export default function ExperienceForm({
   params,
 }: {
@@ -51,7 +52,10 @@ export default function ExperienceForm({
   const isEdit = expId !== createExpId
   const formikRef = useRef<FormikProps<typeof formValues>>(null)
 
-  const { data: { result: edittingData } = {} } = useGetExperienceQuery(
+  const {
+    data: { result: edittingData } = {},
+    isLoading: isLoadingExperience,
+  } = useGetExperienceQuery(
     {
       expId,
     },
@@ -59,15 +63,18 @@ export default function ExperienceForm({
       skip: !isEdit,
     }
   )
-  const { data: creationData, isLoading } = useGetExperienceCreationDataQuery()
+  const { data: creationData, isLoading: isLoadingCreationData } =
+    useGetExperienceCreationDataQuery()
 
-  const { data: { result: registrationsData } = {} } =
-    useGetExperienceRegistrationsQuery(
-      { expId },
-      {
-        skip: !isEdit,
-      }
-    )
+  const {
+    data: { result: registrationsData } = {},
+    isLoading: isLoadingRegistrations,
+  } = useGetExperienceRegistrationsQuery(
+    { expId },
+    {
+      skip: !isEdit,
+    }
+  )
 
   const previousData = useSelector(
     (state: RootState) => state.experiences.credit.form
@@ -140,7 +147,7 @@ export default function ExperienceForm({
       initialValues={formValues}
       onSubmit={handleSubmit}
       validationSchema={create_exp_form_validation_schema}
-      loading={isLoading}
+      loading={isLoadingExperience || isLoadingCreationData}
       formikRef={formikRef}
       classNames={{ form: "grid grid-cols-12 gap-4 py-5" }}
     >
@@ -461,11 +468,18 @@ export default function ExperienceForm({
               ))
             }
           </FieldArray>
-          {registrationsData && registrationsData.attendees.length > 0 && (
-            <RegistrationsList
-              className="col-span-12 sm:col-span-6"
-              attendees={registrationsData.attendees}
-            />
+          {isLoadingRegistrations ? (
+            <div className="col-span-12">
+              <Spinner />
+            </div>
+          ) : (
+            registrationsData &&
+            registrationsData.attendees.length > 0 && (
+              <RegistrationsList
+                className="col-span-12 sm:col-span-6"
+                attendees={registrationsData.attendees}
+              />
+            )
           )}
           <Button
             onClick={() => {

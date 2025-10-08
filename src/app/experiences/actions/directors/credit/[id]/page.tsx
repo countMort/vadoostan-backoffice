@@ -52,6 +52,7 @@ export default function DirectorCredit({
     if (isEdit && director && formikRef.current) {
       if (director) {
         formikRef.current.setValues({
+          name: director.name,
           firstName: "",
           lastName: "",
           mobileNumber: "",
@@ -134,14 +135,6 @@ export default function DirectorCredit({
   const isLoading =
     isCreatingDirector || isUpdatingDirector || isLoadingDirector
 
-  if (isLoadingDirector) {
-    return (
-      <div className="flex justify-center items-center min-h-[200px]">
-        <div>در حال بارگذاری...</div>
-      </div>
-    )
-  }
-
   return (
     <Form
       initialValues={create_director_form_initial_values}
@@ -153,6 +146,7 @@ export default function DirectorCredit({
       }
       formikRef={formikRef}
       classNames={{ form: "grid grid-cols-12 gap-4 py-5" }}
+      loading={isLoading}
     >
       {() => (
         <>
@@ -187,7 +181,6 @@ export default function DirectorCredit({
               className="col-span-12 sm:col-span-6"
               name="name"
               label="نام تجربه‌گردان"
-              value={director?.name}
               disabled
             />
           )}

@@ -65,7 +65,7 @@ export enum ExperienceStatus {
   PUBLISHED = "published",
   INACTIVE = "inactive",
   READY_TO_PUBLISH = "ready_to_publish",
-  CANCELLED = "cancelled",
+  CANCELLED = "canceled",
   RUNNING = "running",
 }
 

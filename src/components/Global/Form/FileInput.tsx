@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react"
+import { ChangeEvent, useState, useRef } from "react"
 import FieldWrapper from "./Partials/FieldWrapper"
 import { BaseInputProps } from "@/types/form"
 import { useField } from "formik"
@@ -29,6 +29,7 @@ export default function FileInput({
   const [deletedExistingIds, setDeletedExistingIds] = useState<
     Set<string | number>
   >(new Set())
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const showError = meta.touched && meta.error
 
   const files = (field.value as File[]) || []
@@ -61,6 +62,10 @@ export default function FileInput({
   const handleRemove = (index: number) => {
     const updated = files.filter((_, i) => i !== index)
     helpers.setValue(updated)
+    // Clear the file input to allow re-uploading the same file
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ""
+    }
   }
 
   // Use existingImageUrl directly since it's now typed as ExistingImage[]
@@ -110,6 +115,7 @@ export default function FileInput({
   return (
     <FieldWrapper label={label} meta={meta} classNames={classNames} name={name}>
       <input
+        ref={fileInputRef}
         className={`block w-full text-sm py-2 text-gray-900 border border-gray-300 rounded-lg cursor-pointer dark:text-gray-400 focus:outline-none dark:border-gray-600 dark:placeholder-gray-400 ${
           showError ? "border-red-500" : ""
         }`}

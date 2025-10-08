@@ -110,14 +110,6 @@ export default function VenueCredit({
     isLoadingVenue ||
     isLoadingCreationData
 
-  if (isLoadingVenue || isLoadingCreationData) {
-    return (
-      <div className="flex justify-center items-center min-h-[200px]">
-        <div>در حال بارگذاری...</div>
-      </div>
-    )
-  }
-
   return (
     <Form
       initialValues={create_venue_form_initial_values}
