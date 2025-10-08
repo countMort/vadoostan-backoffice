@@ -7,7 +7,7 @@ import {
   experience_actions_edit_director_route,
 } from "@/constants/route-names"
 import Link from "next/link"
-import Spinner from "@/components/Global/Spinner/Spinner"
+import Spinner from "@/components/Global/Loading/Spinner"
 import AddIcon from "@mui/icons-material/Add"
 
 export default function DirectorsPage() {

@@ -8,6 +8,7 @@ const initialState: AuthState = {
   // user: null,
   isAuthenticated: false,
   isLoading: false,
+  isInitializing: true,
 }
 
 export const authSlice = createSlice({
@@ -49,15 +50,8 @@ export const authSlice = createSlice({
       state.token = action.payload
       state.isAuthenticated = true
     },
-    clearAuth: (state) => {
-      state.isAuthenticated = false
-      state.token = null
-      state.refreshToken = null
-      // state.user = null
-      state.isLoading = false
-
-      // Clear tokens from cookies
-      authUtils.clearStoredTokens()
+    initializeAuth: (state) => {
+      state.isInitializing = false
     },
   },
 })
@@ -68,7 +62,7 @@ export const {
   loginFailure,
   logout,
   setToken,
-  clearAuth,
+  initializeAuth,
 } = authSlice.actions
 
 export default authSlice.reducer

@@ -3,6 +3,9 @@
 import { experience_create_route } from "@/constants/route-names"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
+import { useSelector } from "react-redux"
+import { RootState } from "@/store"
+import Loading from "@/components/Global/Loading/Loading"
 
 declare global {
   interface Window {
@@ -13,8 +16,12 @@ declare global {
 export default function Home() {
   const [, setUser] = useState<any>(null)
   const router = useRouter()
+  const { isInitializing } = useSelector((state: RootState) => state.auth)
 
   useEffect(() => {
+    // Don't redirect until auth is initialized
+    if (isInitializing) return
+
     const tg = window.Telegram?.WebApp
     if (tg) {
       tg.ready()
@@ -24,9 +31,11 @@ export default function Home() {
     }
 
     router.replace(experience_create_route)
-  }, [router])
+  }, [router, isInitializing])
 
   return (
-    <div className="p-4 text-center h-[100vh] flex items-center justify-center flex-col"></div>
+    <div className="p-4 text-center h-[100vh] flex items-center justify-center flex-col">
+      {isInitializing && <Loading />}
+    </div>
   )
 }

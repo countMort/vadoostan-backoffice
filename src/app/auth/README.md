@@ -8,7 +8,7 @@ This directory contains the authentication system for the Vadoostan Backoffice a
 - Manages authentication state using Redux Toolkit
 - Handles login, logout, and token management
 - Persists tokens in localStorage
-- Actions: `loginStart`, `loginSuccess`, `loginFailure`, `logout`, `setToken`, `clearAuth`
+- Actions: `loginStart`, `loginSuccess`, `loginFailure`, `logout`, `setToken`
 
 ### API (`src/api/auth/index.ts`)
 - RTK Query endpoints for authentication

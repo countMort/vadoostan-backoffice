@@ -11,6 +11,7 @@ import { Button } from "@mui/material"
 import * as Yup from "yup"
 import { FormikHelpers } from "formik"
 import { useEffect } from "react"
+import Loading from "@/components/Global/Loading/Loading"
 
 interface LoginFormValues {
   username: string
@@ -30,16 +31,19 @@ const initialValues: LoginFormValues = {
 export default function LoginPage() {
   const router = useRouter()
   const dispatch = useDispatch<AppDispatch>()
-  const { isAuthenticated, isLoading } = useSelector(
+  const { isAuthenticated, isLoading, isInitializing } = useSelector(
     (state: RootState) => state.auth
   )
   const [loginMutation] = useLoginMutation()
 
   useEffect(() => {
+    // Don't redirect until auth is initialized
+    if (isInitializing) return
+
     if (isAuthenticated) {
       router.push("/experiences")
     }
-  }, [isAuthenticated, router])
+  }, [isAuthenticated, isInitializing, router])
 
   const handleSubmit = async (
     values: LoginFormValues,
@@ -61,58 +65,62 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-[100vh] flex items-center justify-center bg-gradient-to-r from-gray-900 to-black p-4">
-      <div className="max-w-400 w-full box-shadow-8px-32px-rgba-0-0-0-0-1 border-radius-2">
-        <div className="text-2xl font-bold text-primary-main mb-3">
-          بک آفیس و دوستان
+      {isInitializing ? (
+        <Loading />
+      ) : (
+        <div className="max-w-400 w-full box-shadow-8px-32px-rgba-0-0-0-0-1 border-radius-2">
+          <div className="text-2xl font-bold text-primary-main mb-3">
+            بک آفیس و دوستان
+          </div>
+
+          <Form
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            onSubmit={handleSubmit}
+            loading={isLoading}
+            classNames={{
+              wrapper: "w-full",
+              form: "space-y-4 p-5",
+            }}
+          >
+            {(formik) => (
+              <>
+                <TextField
+                  name="username"
+                  label="نام کاربری"
+                  placeholder="نام کاربری خود را وارد کنید"
+                  variant="outlined"
+                  disabled={isLoading}
+                />
+
+                <TextField
+                  name="password"
+                  label="رمز عبور"
+                  type="password"
+                  placeholder="رمز عبور خود را وارد کنید"
+                  variant="outlined"
+                  disabled={isLoading}
+                />
+                <Button
+                  type="submit"
+                  variant="contained"
+                  fullWidth
+                  size="large"
+                  disabled={isLoading || !formik.isValid}
+                  sx={{
+                    marginTop: 2,
+                    padding: 1.5,
+                    fontSize: "1.1rem",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {isLoading ? "در حال ورود..." : "ورود"}
+                </Button>
+              </>
+            )}
+          </Form>
         </div>
-
-        <Form
-          initialValues={initialValues}
-          validationSchema={validationSchema}
-          onSubmit={handleSubmit}
-          loading={isLoading}
-          classNames={{
-            wrapper: "w-full",
-            form: "space-y-4 p-5",
-          }}
-        >
-          {(formik) => (
-            <>
-              <TextField
-                name="username"
-                label="نام کاربری"
-                placeholder="نام کاربری خود را وارد کنید"
-                variant="outlined"
-                disabled={isLoading}
-              />
-
-              <TextField
-                name="password"
-                label="رمز عبور"
-                type="password"
-                placeholder="رمز عبور خود را وارد کنید"
-                variant="outlined"
-                disabled={isLoading}
-              />
-              <Button
-                type="submit"
-                variant="contained"
-                fullWidth
-                size="large"
-                disabled={isLoading || !formik.isValid}
-                sx={{
-                  marginTop: 2,
-                  padding: 1.5,
-                  fontSize: "1.1rem",
-                  fontWeight: "bold",
-                }}
-              >
-                {isLoading ? "در حال ورود..." : "ورود"}
-              </Button>
-            </>
-          )}
-        </Form>
-      </div>
+      )}
     </div>
   )
 }

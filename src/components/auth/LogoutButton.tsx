@@ -6,6 +6,7 @@ import { logout } from "@/app/auth/auth.slice"
 import { useLogoutMutation } from "@/api/auth"
 import { Button } from "@mui/material"
 import { useRouter } from "next/navigation"
+import { login_route } from "@/constants/route-names"
 
 interface LogoutButtonProps {
   variant?: "text" | "outlined" | "contained"
@@ -13,10 +14,10 @@ interface LogoutButtonProps {
   className?: string
 }
 
-export default function LogoutButton({ 
-  variant = "outlined", 
+export default function LogoutButton({
+  variant = "outlined",
   size = "medium",
-  className 
+  className,
 }: LogoutButtonProps) {
   const dispatch = useDispatch<AppDispatch>()
   const router = useRouter()
@@ -30,7 +31,7 @@ export default function LogoutButton({
       console.error("Logout error:", error)
     } finally {
       dispatch(logout())
-      router.push("/login")
+      router.push(login_route)
     }
   }
 

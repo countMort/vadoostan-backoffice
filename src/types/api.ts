@@ -284,4 +284,5 @@ export interface AuthState {
   // } | null
   isAuthenticated: boolean
   isLoading: boolean
+  isInitializing: boolean
 }

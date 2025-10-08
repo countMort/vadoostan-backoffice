@@ -1,6 +1,6 @@
 import { FormProps } from "@/types/form"
 import { Formik, Form, FormikValues } from "formik"
-import Spinner from "@/components/Global/Spinner/Spinner"
+import Spinner from "@/components/Global/Loading/Spinner"
 
 const FormWrapper = <T extends FormikValues>({
   initialValues,
