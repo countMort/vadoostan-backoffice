@@ -16,12 +16,18 @@ declare global {
 
 export default function Home() {
   const [, setUser] = useState<any>(null)
-  const [mounted, setMounted] = useState(false)
+  const [text, setText] = useState<string>("Loading...")
   const router = useRouter()
   const { isInitializing } = useSelector((state: RootState) => state.auth)
 
   useEffect(() => {
-    setMounted(true)
+    setText(JSON.stringify(window?.Telegram) || "No Telegram")
+    setTimeout(() => {
+      setText(JSON.stringify(window?.Telegram) || "No Telegram")
+    }, 5000)
+    setTimeout(() => {
+      setText(JSON.stringify(window?.Telegram?.WebApp) || "No Telegram")
+    }, 10000)
   }, [])
 
   // useEffect(() => {
@@ -41,7 +47,7 @@ export default function Home() {
 
   return (
     <div className="p-4 text-center h-[100vh] flex items-center justify-center flex-col">
-      <div>اطلاعات تلگرامی: {mounted ? JSON.stringify(window?.Telegram) : 'در حال بارگذاری...'}</div>
+      <div>اطلاعات تلگرامی: {text}</div>
       {isInitializing && <Loading />}
       <Button component={Link} href={experience_create_route}>
         تجربه ها
