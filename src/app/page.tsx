@@ -6,6 +6,7 @@ import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 import { RootState } from "@/store"
 import Loading from "@/components/Global/Loading/Loading"
+import { Button, Link } from "@mui/material"
 
 declare global {
   interface Window {
@@ -18,24 +19,28 @@ export default function Home() {
   const router = useRouter()
   const { isInitializing } = useSelector((state: RootState) => state.auth)
 
-  useEffect(() => {
-    // Don't redirect until auth is initialized
-    if (isInitializing) return
+  // useEffect(() => {
+  //   // Don't redirect until auth is initialized
+  //   if (isInitializing) return
 
-    const tg = window.Telegram?.WebApp
-    if (tg) {
-      tg.ready()
+  //   const tg = window.Telegram?.WebApp
+  //   if (tg) {
+  //     tg.ready()
 
-      tg.expand()
-      setUser(tg.initDataUnsafe.user)
-    }
+  //     tg.expand()
+  //     setUser(tg.initDataUnsafe.user)
+  //   }
 
-    router.replace(experience_create_route)
-  }, [router, isInitializing])
+  //   router.replace(experience_create_route)
+  // }, [router, isInitializing])
 
   return (
     <div className="p-4 text-center h-[100vh] flex items-center justify-center flex-col">
+      <div>اطلاعات تلگرامی: {JSON.stringify(window.Telegram?.WebApp)}</div>
       {isInitializing && <Loading />}
+      <Button component={Link} href={experience_create_route}>
+        تجربه ها
+      </Button>
     </div>
   )
 }
