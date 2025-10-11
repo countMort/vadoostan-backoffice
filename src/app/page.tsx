@@ -2,11 +2,10 @@
 
 import { experience_create_route } from "@/constants/route-names"
 import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { useSelector } from "react-redux"
 import { RootState } from "@/store"
 import Loading from "@/components/Global/Loading/Loading"
-import { Button, Link } from "@mui/material"
 
 declare global {
   interface Window {
@@ -15,40 +14,19 @@ declare global {
 }
 
 export default function Home() {
-  const [, setUser] = useState<any>(null)
-  const [text, setText] = useState<string>("Loading...")
   const router = useRouter()
   const { isInitializing } = useSelector((state: RootState) => state.auth)
 
   useEffect(() => {
-    setText(JSON.stringify(window?.Telegram) || "No Telegram")
-    setTimeout(() => {
-      setText(JSON.stringify(window?.Telegram) || "No Telegram")
-    }, 5000)
-  }, [])
+    // Don't redirect until auth is initialized
+    if (isInitializing) return
 
-  // useEffect(() => {
-  //   // Don't redirect until auth is initialized
-  //   if (isInitializing) return
-
-  //   const tg = window.Telegram?.WebApp
-  //   if (tg) {
-  //     tg.ready()
-
-  //     tg.expand()
-  //     setUser(tg.initDataUnsafe.user)
-  //   }
-
-  //   router.replace(experience_create_route)
-  // }, [router, isInitializing])
+    router.replace(experience_create_route)
+  }, [router, isInitializing])
 
   return (
     <div className="p-4 text-center h-[100vh] flex items-center justify-center flex-col">
-      <div>اطلاعات تلگرامی: {text}</div>
       {isInitializing && <Loading />}
-      <Button component={Link} href={experience_create_route}>
-        تجربه ها
-      </Button>
     </div>
   )
 }

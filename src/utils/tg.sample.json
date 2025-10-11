@@ -1,0 +1,161 @@
+{
+  "WebView": {
+    "initParams": {
+      "tgWebAppData": {
+        "user": {
+          "id": 110603219,
+          "first_name": "Morteza",
+          "last_name": "Gholami",
+          "username": "Morteza3000",
+          "language_code": "en",
+          "allows_write_to_pm": true,
+          "photo_url": "https://t.me/i/userpic/320/llqeclXzk7B8IbPv9irvSmSOSRiRgB4qv6tnsoQ58_Q.svg"
+        },
+        "chat_instance": "-533125893451620175",
+        "chat_type": "sender",
+        "auth_date": "1760202338",
+        "signature": "3oyEbODf44qkge_HoNwO2VyxFfPuXws662mz1y8HxbYRWXwa2LsCR6o_rRsLMfcKc9PeicAr6z7g59ihdPzkDQ",
+        "hash": "f1e3cfe8d40581808fd2a271ac1b13c42f6874b9a10d5086b7f5b4bb487fc7a9"
+      },
+      "tgWebAppVersion": "9.1",
+      "tgWebAppPlatform": "tdesktop",
+      "tgWebAppThemeParams": {
+        "accent_text_color": "#6ab2f2",
+        "bg_color": "#17212b",
+        "bottom_bar_bg_color": "#17212b",
+        "button_color": "#5288c1",
+        "button_text_color": "#ffffff",
+        "destructive_text_color": "#ec3942",
+        "header_bg_color": "#17212b",
+        "hint_color": "#708499",
+        "link_color": "#6ab3f3",
+        "secondary_bg_color": "#232e3c",
+        "section_bg_color": "#17212b",
+        "section_header_text_color": "#6ab3f3",
+        "section_separator_color": "#111921",
+        "subtitle_text_color": "#708499",
+        "text_color": "#f5f5f5"
+      }
+    },
+    "isIframe": false
+  },
+  "Utils": {},
+  "WebApp": {
+    "initData": {
+      "user": {
+        "id": 110603219,
+        "first_name": "Morteza",
+        "last_name": "Gholami",
+        "username": "Morteza3000",
+        "language_code": "en",
+        "allows_write_to_pm": true,
+        "photo_url": "https://t.me/i/userpic/320/llqeclXzk7B8IbPv9irvSmSOSRiRgB4qv6tnsoQ58_Q.svg"
+      },
+      "chat_instance": "-533125893451620175",
+      "chat_type": "sender",
+      "auth_date": "1760202338",
+      "signature": "3oyEbODf44qkge_HoNwO2VyxFfPuXws662mz1y8HxbYRWXwa2LsCR6o_rRsLMfcKc9PeicAr6z7g59ihdPzkDQ",
+      "hash": "f1e3cfe8d40581808fd2a271ac1b13c42f6874b9a10d5086b7f5b4bb487fc7a9"
+    },
+    "initDataUnsafe": {
+      "user": {
+        "id": 110603219,
+        "first_name": "Morteza",
+        "last_name": "Gholami",
+        "username": "Morteza3000",
+        "language_code": "en",
+        "allows_write_to_pm": true,
+        "photo_url": "https://t.me/i/userpic/320/llqeclXzk7B8IbPv9irvSmSOSRiRgB4qv6tnsoQ58_Q.svg"
+      },
+      "chat_instance": "-533125893451620175",
+      "chat_type": "sender",
+      "auth_date": "1760202338",
+      "signature": "3oyEbODf44qkge_HoNwO2VyxFfPuXws662mz1y8HxbYRWXwa2LsCR6o_rRsLMfcKc9PeicAr6z7g59ihdPzkDQ",
+      "hash": "f1e3cfe8d40581808fd2a271ac1b13c42f6874b9a10d5086b7f5b4bb487fc7a9"
+    },
+    "version": "9.1",
+    "platform": "tdesktop",
+    "colorScheme": "dark",
+    "themeParams": {
+      "accent_text_color": "#6ab2f2",
+      "bg_color": "#17212b",
+      "bottom_bar_bg_color": "#17212b",
+      "button_color": "#5288c1",
+      "button_text_color": "#ffffff",
+      "destructive_text_color": "#ec3942",
+      "header_bg_color": "#17212b",
+      "hint_color": "#708499",
+      "link_color": "#6ab3f3",
+      "secondary_bg_color": "#232e3c",
+      "section_bg_color": "#17212b",
+      "section_header_text_color": "#6ab3f3",
+      "section_separator_color": "#111921",
+      "subtitle_text_color": "#708499",
+      "text_color": "#f5f5f5"
+    },
+    "isExpanded": true,
+    "viewportHeight": 692,
+    "viewportStableHeight": 692,
+    "safeAreaInset": { "top": 0, "bottom": 0, "left": 0, "right": 0 },
+    "contentSafeAreaInset": { "top": 0, "bottom": 0, "left": 0, "right": 0 },
+    "isClosingConfirmationEnabled": false,
+    "isVerticalSwipesEnabled": true,
+    "isFullscreen": false,
+    "isOrientationLocked": false,
+    "isActive": true,
+    "headerColor": "#17212b",
+    "backgroundColor": "#17212b",
+    "bottomBarColor": "#17212b",
+    "BackButton": { "isVisible": false },
+    "MainButton": {
+      "type": "main",
+      "text": "Continue",
+      "color": "#5288c1",
+      "textColor": "#ffffff",
+      "isVisible": false,
+      "isProgressVisible": false,
+      "isActive": true,
+      "hasShineEffect": false
+    },
+    "SecondaryButton": {
+      "type": "secondary",
+      "text": "Cancel",
+      "color": "#17212b",
+      "textColor": "#5288c1",
+      "isVisible": false,
+      "isProgressVisible": false,
+      "isActive": true,
+      "hasShineEffect": false,
+      "position": "left"
+    },
+    "SettingsButton": { "isVisible": false },
+    "HapticFeedback": {},
+    "CloudStorage": {},
+    "DeviceStorage": {},
+    "SecureStorage": {},
+    "BiometricManager": {
+      "isInited": false,
+      "isBiometricAvailable": false,
+      "biometricType": "unknown",
+      "isAccessRequested": false,
+      "isAccessGranted": false,
+      "isBiometricTokenSaved": false,
+      "deviceId": ""
+    },
+    "Accelerometer": { "isStarted": false, "x": null, "y": null, "z": null },
+    "DeviceOrientation": {
+      "isStarted": false,
+      "absolute": false,
+      "alpha": null,
+      "beta": null,
+      "gamma": null
+    },
+    "Gyroscope": { "isStarted": false, "x": null, "y": null, "z": null },
+    "LocationManager": {
+      "isInited": false,
+      "isLocationAvailable": false,
+      "isAccessRequested": false,
+      "isAccessGranted": false
+    }
+  }
+}
