@@ -41,7 +41,7 @@ export default function Home() {
 
   return (
     <div className="p-4 text-center h-[100vh] flex items-center justify-center flex-col">
-      <div>اطلاعات تلگرامی: {mounted ? JSON.stringify(window?.Telegram?.WebApp) : 'در حال بارگذاری...'}</div>
+      <div>اطلاعات تلگرامی: {mounted ? JSON.stringify(window?.Telegram) : 'در حال بارگذاری...'}</div>
       {isInitializing && <Loading />}
       <Button component={Link} href={experience_create_route}>
         تجربه ها
