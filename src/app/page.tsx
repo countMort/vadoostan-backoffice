@@ -25,9 +25,6 @@ export default function Home() {
     setTimeout(() => {
       setText(JSON.stringify(window?.Telegram) || "No Telegram")
     }, 5000)
-    setTimeout(() => {
-      setText(JSON.stringify(window?.Telegram?.WebApp) || "No Telegram")
-    }, 10000)
   }, [])
 
   // useEffect(() => {
