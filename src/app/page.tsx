@@ -36,7 +36,7 @@ export default function Home() {
 
   return (
     <div className="p-4 text-center h-[100vh] flex items-center justify-center flex-col">
-      <div>اطلاعات تلگرامی: {JSON.stringify(window.Telegram?.WebApp)}</div>
+      <div>اطلاعات تلگرامی: {JSON.stringify(window?.Telegram?.WebApp)}</div>
       {isInitializing && <Loading />}
       <Button component={Link} href={experience_create_route}>
         تجربه ها
