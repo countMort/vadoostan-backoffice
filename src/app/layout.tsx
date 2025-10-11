@@ -7,6 +7,7 @@ import AppThemeProvider from "@/components/layout/ThemeProvider"
 import AuthInitializer from "@/components/auth/AuthInitializer"
 import { ToastContainer } from "react-toastify"
 import { vazirmatn } from "@/assets/theme"
+import Script from "next/script"
 
 export const metadata: Metadata = {
   title: "و دوستان بک آفیس",
@@ -31,6 +32,7 @@ export default function RootLayout({
             </AppThemeProvider>
           </AppRouterCacheProvider>
           <ToastContainer />
+          <Script src="https://telegram.org/js/telegram-web-app.js?59"></Script>
         </body>
       </html>
     </StoreProvider>
